@@ -34,13 +34,13 @@ class java_class_typet:public class_typet
 
 inline const java_class_typet &to_java_class_type(const typet &type)
 {
-  assert(type.id()==ID_struct);
+  PRECONDITION(type.id()==ID_struct);
   return static_cast<const java_class_typet &>(type);
 }
 
 inline java_class_typet &to_java_class_type(typet &type)
 {
-  assert(type.id()==ID_struct);
+  PRECONDITION(type.id()==ID_struct);
   return static_cast<java_class_typet &>(type);
 }
 
@@ -516,6 +516,71 @@ to_java_specialized_generic_class_type(typet &type)
     is_java_specialized_generic_class_type(type),
     "Tried to convert a type that was not a specialised generic java class");
   return static_cast<const java_specialized_generic_class_typet &>(type);
+}
+
+/// Type for generic bases, extends typet with a
+/// vector of java generic types.
+/// This is used to store the type of generic superclasses and interfaces.
+class java_generic_base_typet : public typet
+{
+public:
+  typedef std::vector<reference_typet> generic_typest;
+
+  java_generic_base_typet(
+    const irep_idt &identifier,
+    const generic_typest &gen_types)
+    : typet(ID_generic_base)
+  {
+    set(ID_identifier, identifier);
+    generic_types().insert(generic_types().end(), gen_types.begin(), gen_types
+      .end());
+  }
+
+  static java_generic_base_typet build_from_ref(
+    const std::string &base_ref,
+    const std::string &class_name_prefix)
+  {
+    const typet &base_type = java_type_from_string(base_ref, class_name_prefix);
+    PRECONDITION(is_java_generic_type(base_type));
+    java_generic_typet gen_base_type = to_java_generic_type(base_type);
+    return java_generic_base_typet(
+      gen_base_type.subtype().get(ID_identifier),
+      gen_base_type.generic_type_arguments());
+  }
+
+  const generic_typest &generic_types() const
+  {
+    return (const generic_typest &)(find(ID_generic_types).get_sub());
+  }
+
+  generic_typest &generic_types()
+  {
+    return (generic_typest &)(add(ID_generic_types).get_sub());
+  }
+};
+
+/// \param type: the type to check
+/// \return true if type is a java class type with generics
+inline bool is_java_generic_base_type(const typet &type)
+{
+  return (type.id() == ID_generic_base);
+}
+
+/// \param type: the type to convert
+/// \return the converted type
+inline const java_generic_base_typet &
+to_java_generic_base_type(const typet &type)
+{
+  PRECONDITION(is_java_generic_base_type(type));
+  return static_cast<const java_generic_base_typet &>(type);
+}
+
+/// \param type: the type to convert
+/// \return the converted type
+inline java_generic_base_typet &to_java_generic_base_type(typet &type)
+{
+  PRECONDITION(is_java_generic_base_type(type));
+  return static_cast<java_generic_base_typet &>(type);
 }
 
 /// Take a signature string and remove everything in angle brackets allowing for
