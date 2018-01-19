@@ -71,6 +71,10 @@ bool is_reference_type(char t);
 // z  boolean
 // a  reference
 
+size_t find_closing_semi_colon_for_reference_type(
+  const std::string src,
+  size_t starting_point = 0);
+
 typet java_type_from_char(char t);
 typet java_type_from_string(
   const std::string &,

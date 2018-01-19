@@ -85,6 +85,79 @@ protected:
   static void add_array_types(symbol_tablet &symbol_table);
 };
 
+/// Auxiliary function to extract the generic superclass reference from the
+/// class signature. If the superclass is not generic, it returns an empty
+/// string.
+/// \param signature Signature of the class
+/// \return Reference of the generic superclass, or empty if the superclass
+/// is not generic
+static std::string
+extract_generic_superclass_reference(const std::string &signature)
+{
+  // skip the (potential) list of generic parameters at the beginning of the
+  // signature
+  size_t start = 0;
+  if(signature.front() == '<')
+  {
+    start = find_closing_delimiter(signature, 0, '<', '>') + 1;
+  }
+
+  std::string superclass_ref = signature.substr(start);
+  superclass_ref = superclass_ref.substr(
+    0, find_closing_semi_colon_for_reference_type(superclass_ref, 0) + 1);
+
+  // if the superclass is generic then the reference is of form
+  // Lsuperclass-name<generic-types>;
+  if(superclass_ref.substr(superclass_ref.length() - 2) == ">;")
+    return superclass_ref;
+  else
+    return "";
+}
+
+/// Auxiliary function to extract the generic interface reference of an
+/// interface with the specified name from the class signature. If the
+/// interface is not generic, it returns an empty string.
+/// \param signature Signature of the class
+/// \param interface_name The interface name
+/// \return Reference of the generic interface, or empty if the interface
+/// is not generic
+static std::string extract_generic_interface_reference(
+  const std::string &signature,
+  const std::string &interface_name)
+{
+  // skip the (potential) list of generic parameters at the beginning of the
+  // signature
+  size_t start = 0;
+  if(signature.front() == '<')
+  {
+    start = find_closing_delimiter(signature, 0, '<', '>') + 1;
+  }
+
+  // skip the superclass reference
+  start = find_closing_semi_colon_for_reference_type(signature, start) + 1;
+
+  // iterate through the references of interfaces, find the one that matches
+  // the interface_name and if it is generic, return the reference
+  size_t end;
+  std::string interface_ref;
+  while(start < signature.length())
+  {
+    end = find_closing_semi_colon_for_reference_type(signature, start);
+    interface_ref = signature.substr(start, end - start + 1);
+    start = end + 1;
+    if(has_prefix(interface_ref, "L" + interface_name))
+    {
+      if(has_prefix(interface_ref, "L" + interface_name + "<"))
+      {
+        // the interface is generic
+        break;
+      }
+      interface_ref = "";
+    }
+  }
+  return interface_ref;
+}
+
 void java_bytecode_convert_classt::convert(const classt &c)
 {
   std::string qualified_classname="java::"+id2string(c.name);
@@ -145,10 +218,27 @@ void java_bytecode_convert_classt::convert(const classt &c)
 
   if(!c.extends.empty())
   {
-    symbol_typet base("java::"+id2string(c.extends));
-    class_type.add_base(base);
+    // if the superclass is generic then the class has the superclass reference
+    // including the generic info in its signature
+    // e.g., signature for class 'A' that extends
+    // 'Generic<Integer>' is 'LGeneric<LInteger;>;'
+    if(
+      c.signature.has_value() &&
+      !extract_generic_superclass_reference(c.signature.value()).empty())
+    {
+      java_generic_base_typet gen_base =
+        java_generic_base_typet::build_from_ref(
+          extract_generic_superclass_reference(c.signature.value()),
+          qualified_classname);
+      class_type.add_base(gen_base);
+    }
+    else
+    {
+      symbol_typet base("java::" + id2string(c.extends));
+      class_type.add_base(base);
+    }
     class_typet::componentt base_class_field;
-    base_class_field.type()=base;
+    base_class_field.type() = class_type.bases().at(0).type();
     base_class_field.set_name("@"+id2string(c.extends));
     base_class_field.set_base_name("@"+id2string(c.extends));
     base_class_field.set_pretty_name("@"+id2string(c.extends));
@@ -158,8 +248,29 @@ void java_bytecode_convert_classt::convert(const classt &c)
   // interfaces are recorded as bases
   for(const auto &interface : c.implements)
   {
-    symbol_typet base("java::"+id2string(interface));
-    class_type.add_base(base);
+    // if the interface is generic then the class has the interface reference
+    // including the generic info in its signature
+    // e.g., signature for class 'A' that implements
+    // 'GenericInterface<Integer>' is 'Ljava/lang/Object;
+    // LGenericInterface<LInteger;>;'
+    if(
+      c.signature.has_value() &&
+      !extract_generic_interface_reference(
+         c.signature.value(), id2string(interface))
+         .empty())
+    {
+      java_generic_base_typet gen_base =
+        java_generic_base_typet::build_from_ref(
+          extract_generic_interface_reference(
+            c.signature.value(), id2string(interface)),
+          qualified_classname);
+      class_type.add_base(gen_base);
+    }
+    else
+    {
+      symbol_typet base("java::" + id2string(interface));
+      class_type.add_base(base);
+    }
   }
 
   // produce class symbol
