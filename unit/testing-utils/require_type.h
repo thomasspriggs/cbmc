@@ -85,9 +85,9 @@ java_implicitly_generic_class_typet require_java_implicitly_generic_class(
 
 java_class_typet require_java_non_generic_class(const typet &class_type);
 
-java_generic_base_typet require_java_generic_base_type(const typet &type,
-                                                           const std::string
-                                                           &identifier);
+java_generic_base_typet require_java_generic_base_type(
+  const typet &type,
+  const std::string &identifier);
 
 java_generic_base_typet require_java_generic_base_type(
   const typet &type,

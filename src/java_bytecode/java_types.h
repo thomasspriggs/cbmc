@@ -34,13 +34,13 @@ class java_class_typet:public class_typet
 
 inline const java_class_typet &to_java_class_type(const typet &type)
 {
-  PRECONDITION(type.id()==ID_struct);
+  PRECONDITION(type.id() == ID_struct);
   return static_cast<const java_class_typet &>(type);
 }
 
 inline java_class_typet &to_java_class_type(typet &type)
 {
-  PRECONDITION(type.id()==ID_struct);
+  PRECONDITION(type.id() == ID_struct);
   return static_cast<java_class_typet &>(type);
 }
 
@@ -536,8 +536,8 @@ public:
     : typet(ID_generic_base)
   {
     set(ID_identifier, identifier);
-    generic_types().insert(generic_types().end(), gen_types.begin(), gen_types
-      .end());
+    generic_types().insert(
+      generic_types().end(), gen_types.begin(), gen_types.end());
   }
 
   static java_generic_base_typet build_from_ref(

@@ -705,25 +705,22 @@ bool jbmc_parse_optionst::process_goto_functions(
     // TODO Should really get this from java_bytecode_language somehow, but we
     // don't have an instance of that here.
     object_factory_parameterst factory_params;
-    factory_params.max_nondet_array_length=
+    factory_params.max_nondet_array_length =
       cmdline.isset("java-max-input-array-length")
         ? std::stoul(cmdline.get_value("java-max-input-array-length"))
         : MAX_NONDET_ARRAY_LENGTH_DEFAULT;
-    factory_params.max_nondet_string_length=
+    factory_params.max_nondet_string_length =
       cmdline.isset("string-max-input-length")
         ? std::stoul(cmdline.get_value("string-max-input-length"))
         : MAX_NONDET_STRING_LENGTH;
-    factory_params.max_nondet_tree_depth=
+    factory_params.max_nondet_tree_depth =
       cmdline.isset("java-max-input-tree-depth")
         ? std::stoul(cmdline.get_value("java-max-input-tree-depth"))
         : MAX_NONDET_TREE_DEPTH;
 
     replace_java_nondet(goto_model);
 
-    convert_nondet(
-      goto_model,
-      get_message_handler(),
-      factory_params);
+    convert_nondet(goto_model, get_message_handler(), factory_params);
 
     // add generic checks
     status() << "Generic Property Instrumentation" << eom;

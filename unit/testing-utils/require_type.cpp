@@ -352,9 +352,9 @@ require_type::require_symbol(const typet &type, const irep_idt &identifier)
 /// \param type The type to check
 /// \param identifier The identifier to match
 /// \return The type, cast to a java_generic_base_typet
-java_generic_base_typet require_type::require_java_generic_base_type
-  (const typet &type, const
-std::string &identifier)
+java_generic_base_typet require_type::require_java_generic_base_type(
+  const typet &type,
+  const std::string &identifier)
 {
   REQUIRE(is_java_generic_base_type(type));
   REQUIRE(type.get(ID_identifier) == identifier);
@@ -377,8 +377,7 @@ std::string &identifier)
 java_generic_base_typet require_type::require_java_generic_base_type(
   const typet &type,
   const std::string &identifier,
-  const require_type::expected_type_argumentst &type_expectations
-)
+  const require_type::expected_type_argumentst &type_expectations)
 {
   const java_generic_base_typet &generic_base_type =
     require_type::require_java_generic_base_type(type, identifier);
@@ -395,4 +394,3 @@ java_generic_base_typet require_type::require_java_generic_base_type(
 
   return generic_base_type;
 }
-
