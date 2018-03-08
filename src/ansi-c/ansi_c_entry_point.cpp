@@ -126,7 +126,9 @@ bool ansi_c_entry_point(
   {
     std::list<irep_idt> matches;
 
-    forall_symbol_base_map(it, symbol_table.symbol_base_map, config.main)
+    const auto &main_range =
+      symbol_table.symbol_base_map.equal_range(config.main);
+    for(const auto &it : {main_range.first, main_range.second})
     {
       // look it up
       symbol_tablet::symbolst::const_iterator s_it=

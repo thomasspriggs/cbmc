@@ -35,7 +35,8 @@ const symbolt &get_module_by_name(
   symbolptr_listt symbolptr_list;
   messaget message(message_handler);
 
-  forall_symbol_base_map(it, symbol_table.symbol_base_map, module)
+  const auto &modules_range = symbol_table.symbol_base_map.equal_range(module);
+  for(const auto &it : {modules_range.first, modules_range.second})
   {
     symbol_tablet::symbolst::const_iterator it2=
       symbol_table.symbols.find(it->second);

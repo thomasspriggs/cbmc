@@ -151,7 +151,9 @@ symbol_exprt get_isr(
 {
   std::list<symbol_exprt> matches;
 
-  forall_symbol_base_map(m_it, symbol_table.symbol_base_map, interrupt_handler)
+  const auto &interrupts_range =
+    symbol_table.symbol_base_map.equal_range(interrupt_handler);
+  for(const auto &m_it : {interrupts_range.first, interrupts_range.second})
   {
     // look it up
     symbol_tablet::symbolst::const_iterator s_it=
