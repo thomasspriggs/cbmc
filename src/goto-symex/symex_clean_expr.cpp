@@ -116,8 +116,8 @@ void goto_symext::process_array_expr(exprt &expr)
 /// Rewrite index/member expressions in byte_extract to offset
 static void adjust_byte_extract_rec(exprt &expr, const namespacet &ns)
 {
-  Forall_operands(it, expr)
-    adjust_byte_extract_rec(*it, ns);
+  for(exprt &operand : expr.operands())
+    adjust_byte_extract_rec(operand, ns);
 
   if(expr.id()==ID_byte_extract_big_endian ||
      expr.id()==ID_byte_extract_little_endian)

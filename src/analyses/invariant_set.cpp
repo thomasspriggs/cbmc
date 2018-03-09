@@ -730,16 +730,16 @@ void invariant_sett::nnf(exprt &expr, bool negate)
     if(negate)
       expr.id(ID_or);
 
-    Forall_operands(it, expr)
-      nnf(*it, negate);
+    for(exprt &operand : expr.operands())
+      nnf(operand, negate);
   }
   else if(expr.id()==ID_or)
   {
     if(negate)
       expr.id(ID_and);
 
-    Forall_operands(it, expr)
-      nnf(*it, negate);
+    for(exprt &operand : expr.operands())
+      nnf(operand, negate);
   }
   else if(expr.id()==ID_typecast)
   {
@@ -821,8 +821,8 @@ void invariant_sett::simplify(
   if(expr.id()==ID_address_of)
     return;
 
-  Forall_operands(it, expr)
-    simplify(*it);
+  for(exprt &operand : expr.operands())
+    simplify(operand);
 
   if(expr.id()==ID_symbol ||
      expr.id()==ID_member)

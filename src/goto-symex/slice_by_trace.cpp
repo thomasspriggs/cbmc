@@ -427,9 +427,11 @@ void symex_slice_by_tracet::slice_SSA_steps(
     }
     else if(guard.id()==ID_and)
     {
-      Forall_operands(git, guard)
+      if( guard.has_operands() )
       {
-        exprt neg_expr=*git;
+      for(exprt git : guard.operands())
+      {
+        exprt neg_expr=git;
         neg_expr.make_not();
         simplify(neg_expr, ns);
 
@@ -444,6 +446,7 @@ void symex_slice_by_tracet::slice_SSA_steps(
           sliced_SSA_step=true;
           break; // Sliced, so no need to consider the rest
         }
+      }
       }
       else if(guard.id()==ID_or)
       {
@@ -572,9 +575,9 @@ std::set<exprt> symex_slice_by_tracet::implied_guards(exprt e)
   }
   else if(e.id()==ID_and)
   { // Descend into and
-    Forall_operands(it, e)
+    for(exprt &operand : e.operands())
     {
-      std::set<exprt> r=implied_guards(*it);
+      std::set<exprt> r=implied_guards(operand);
       for(std::set<exprt>::iterator i=r.begin();
           i!=r.end(); i++)
       {
@@ -586,9 +589,9 @@ std::set<exprt> symex_slice_by_tracet::implied_guards(exprt e)
   else if(e.id()==ID_or)
   { // Descend into or
     std::vector<std::set<exprt> > rs;
-    Forall_operands(it, e)
+    for(exprt &operand : e.operands())
     {
-      rs.push_back(implied_guards(*it));
+      rs.push_back(implied_guards(operand));
     }
     for(std::set<exprt>::iterator i=rs.front().begin();
         i!=rs.front().end();)

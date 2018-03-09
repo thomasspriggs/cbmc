@@ -571,6 +571,6 @@ void constant_propagator_ait::replace_types_rec(
 {
   replace_const(expr.type());
 
-  Forall_operands(it, expr)
-    replace_types_rec(replace_const, *it);
+  for(exprt &operand : expr.operands())
+    replace_types_rec(replace_const, operand);
 }

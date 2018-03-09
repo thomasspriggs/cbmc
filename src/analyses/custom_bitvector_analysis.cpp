@@ -736,8 +736,8 @@ exprt custom_bitvector_domaint::eval(
   else
   {
     exprt tmp=src;
-    Forall_operands(it, tmp)
-      *it=eval(*it, custom_bitvector_analysis);
+    for(exprt &operand : tmp.operands())
+      operand=eval(operand, custom_bitvector_analysis);
 
     return tmp;
   }

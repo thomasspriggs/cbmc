@@ -110,8 +110,8 @@ void postconditiont::weaken(exprt &dest)
   if(dest.id()==ID_and &&
      dest.type()==bool_typet()) // this distributes over "and"
   {
-    Forall_operands(it, dest)
-      weaken(*it);
+    for(exprt &operand : dest.operands())
+      weaken(operand);
 
     return;
   }

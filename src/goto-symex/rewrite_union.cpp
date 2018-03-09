@@ -81,8 +81,8 @@ void rewrite_union(
   if(!have_to_rewrite_union(expr, ns))
     return;
 
-  Forall_operands(it, expr)
-    rewrite_union(*it, ns);
+  for(exprt &operand : expr.operands())
+    rewrite_union(operand, ns);
 
   if(expr.id()==ID_member)
   {

@@ -387,8 +387,8 @@ void goto_symex_statet::propagationt::operator()(exprt &expr)
   else
   {
     // do this recursively
-    Forall_operands(it, expr)
-      operator()(*it);
+    for(exprt &operand : expr.operands())
+      operator()(operand);
   }
 }
 
@@ -504,8 +504,8 @@ void goto_symex_statet::rename(
     rename(expr.type(), irep_idt(), ns, level);
 
     // do this recursively
-    Forall_operands(it, expr)
-      rename(*it, ns, level);
+    for(exprt &operand : expr.operands())
+      rename(operand, ns, level);
 
     // some fixes
     if(expr.id()==ID_with)
@@ -774,8 +774,8 @@ void goto_symex_statet::rename_address(
 
       // do this recursively; we assume here
       // that all the operands are addresses
-      Forall_operands(it, expr)
-        rename_address(*it, ns, level);
+      for(exprt &operand : expr.operands())
+        rename_address(operand, ns, level);
     }
   }
 }
@@ -859,8 +859,8 @@ void goto_symex_statet::get_original_name(exprt &expr) const
      expr.get_bool(ID_C_SSA_symbol))
     expr=to_ssa_expr(expr).get_original_expr();
   else
-    Forall_operands(it, expr)
-      get_original_name(*it);
+    for(exprt &operand : expr.operands())
+      get_original_name(operand);
 }
 
 void goto_symex_statet::get_original_name(typet &type) const
@@ -899,8 +899,8 @@ void goto_symex_statet::get_l1_name(exprt &expr) const
      expr.get_bool(ID_C_SSA_symbol))
     to_ssa_expr(expr).remove_level_2();
   else
-    Forall_operands(it, expr)
-      get_l1_name(*it);
+    for(exprt &operand : expr.operands())
+      get_l1_name(operand);
 }
 
 void goto_symex_statet::switch_to_thread(unsigned t)

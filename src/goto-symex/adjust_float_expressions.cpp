@@ -84,8 +84,8 @@ void adjust_float_expressions(
   if(!have_to_adjust_float_expressions(expr, ns))
     return;
 
-  Forall_operands(it, expr)
-    adjust_float_expressions(*it, ns);
+  for(exprt &operand : expr.operands())
+    adjust_float_expressions(operand, ns);
 
   const typet &type=ns.follow(expr.type());
 
