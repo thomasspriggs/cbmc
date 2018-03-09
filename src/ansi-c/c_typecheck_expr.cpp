@@ -266,12 +266,12 @@ void c_typecheck_baset::typecheck_expr_main(exprt &expr)
   {
     exprt &designator=static_cast<exprt &>(expr.add(ID_designator));
 
-    Forall_operands(it, designator)
+    for(exprt &operand : designator.operands())
     {
-      if(it->id()==ID_index)
+      if(operand.id()==ID_index)
       {
-        assert(it->operands().size()==1);
-        typecheck_expr(it->op0()); // still needs typechecking
+        assert(operand.operands().size()==1);
+        typecheck_expr(operand.op0()); // still needs typechecking
       }
     }
   }
@@ -733,8 +733,8 @@ void c_typecheck_baset::typecheck_expr_operands(exprt &expr)
   }
   else
   {
-    Forall_operands(it, expr)
-      typecheck_expr(*it);
+    for(exprt &operand : expr.operands())
+      typecheck_expr(operand);
   }
 }
 

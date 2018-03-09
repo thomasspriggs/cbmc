@@ -46,8 +46,8 @@ void approximate_nondet_rec(exprt &dest, unsigned &count)
     return;
   }
 
-  Forall_operands(it, dest)
-    approximate_nondet_rec(*it, count);
+  for(exprt &operand : dest.operands())
+    approximate_nondet_rec(operand, count);
 }
 
 void approximate_nondet(exprt &dest)
@@ -119,8 +119,8 @@ void substitute_rec(
   const namespacet &ns)
 {
   if(dest.id()!=ID_address_of)
-    Forall_operands(it, dest)
-      substitute_rec(*it, what, by, ns);
+    for(exprt &operand : dest.operands())
+      substitute_rec(operand, what, by, ns);
 
   // possibly substitute?
   if(dest.id()==ID_member ||

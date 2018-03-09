@@ -754,8 +754,8 @@ void goto_convertt::convert_assign(
       throw 0;
     }
 
-    Forall_operands(it, rhs)
-      clean_expr(*it, dest, mode);
+    for(exprt &operand : rhs.operands())
+      clean_expr(operand, dest, mode);
 
     do_function_call(lhs, rhs.op0(), rhs.op1().operands(), dest, mode);
   }
@@ -763,8 +763,8 @@ void goto_convertt::convert_assign(
           (rhs.get(ID_statement)==ID_cpp_new ||
            rhs.get(ID_statement)==ID_cpp_new_array))
   {
-    Forall_operands(it, rhs)
-      clean_expr(*it, dest, mode);
+    for(exprt &operand : rhs.operands())
+      clean_expr(operand, dest, mode);
 
     // TODO: This should be done in a separate pass
     do_cpp_new(lhs, to_side_effect_expr(rhs), dest);
@@ -803,8 +803,8 @@ void goto_convertt::convert_assign(
   {
     // preserve side effects that will be handled at later stages,
     // such as allocate, new operators of other languages, e.g. java, etc
-    Forall_operands(it, rhs)
-      clean_expr(*it, dest, mode);
+    for(exprt &operand : rhs.operands())
+      clean_expr(operand, dest, mode);
 
     code_assignt new_assign(code);
     new_assign.lhs()=lhs;

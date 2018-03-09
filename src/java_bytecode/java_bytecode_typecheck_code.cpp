@@ -26,8 +26,8 @@ void java_bytecode_typecheckt::typecheck_code(codet &code)
   }
   else if(statement==ID_block)
   {
-    Forall_operands(it, code)
-      typecheck_code(to_code(*it));
+    for(exprt &operand : code.operands())
+      typecheck_code(to_code(operand));
   }
   else if(statement==ID_label)
   {

@@ -503,25 +503,25 @@ bool simplify_exprt::simplify_plus(exprt &expr)
     // merge constants?
     if(count>=2)
     {
-      exprt::operandst::iterator const_sum;
+      exprt *const_sum;
       bool const_sum_set=false;
 
-      Forall_operands(it, expr)
+      for(exprt &operand : expr.operands())
       {
-        if(is_number(it->type()) && it->is_constant())
+        if(is_number(operand.type()) && operand.is_constant())
         {
           if(!const_sum_set)
           {
-            const_sum=it;
+            const_sum=&operand;
             const_sum_set=true;
           }
           else
           {
             if(!sum_expr(to_constant_expr(*const_sum), 
-                         to_constant_expr(*it)))
+                         to_constant_expr(operand)))
             {
-              *it=from_integer(0, it->type());
-              assert(it->is_not_nil());
+              operand=from_integer(0, operand.type());
+              assert(operand.is_not_nil());
               result=false;
             }
           }
@@ -691,18 +691,18 @@ bool simplify_exprt::simplify_bitwise(exprt &expr)
       else
         UNREACHABLE;
 
-      Forall_operands(it, new_expr)
+      for(exprt &operand : new_expr.operands())
       {
-        if(it->id()==ID_typecast)
+        if(operand.id()==ID_typecast)
         {
           exprt tmp;
-          tmp=it->op0();
-          it->swap(tmp);
+          tmp=operand.op0();
+          operand.swap(tmp);
         }
-        else if(it->is_zero())
-          *it=false_exprt();
-        else if(it->is_one())
-          *it=true_exprt();
+        else if(operand.is_zero())
+          operand=false_exprt();
+        else if(operand.is_one())
+          operand=true_exprt();
       }
 
       new_expr.type()=bool_typet();
@@ -886,9 +886,8 @@ bool simplify_exprt::simplify_concatenation(exprt &expr)
   if(is_bitvector_type(expr.type()))
   {
     // first, turn bool into bvec[1]
-    Forall_operands(it, expr)
+    for(exprt &op : expr.operands())
     {
-      exprt &op=*it;
       if(op.is_true() || op.is_false())
       {
         bool value=op.is_true();
@@ -1504,8 +1503,8 @@ bool simplify_exprt::eliminate_common_addends(
   {
     bool result=true;
 
-    Forall_operands(it, op0)
-      if(!eliminate_common_addends(*it, op1))
+    for(exprt &operand : op0.operands())
+      if(!eliminate_common_addends(operand, op1))
         result=false;
 
     return result;
@@ -1514,8 +1513,8 @@ bool simplify_exprt::eliminate_common_addends(
   {
     bool result=true;
 
-    Forall_operands(it, op1)
-      if(!eliminate_common_addends(op0, *it))
+    for(exprt &operand : op1.operands())
+      if(!eliminate_common_addends(op0, operand))
         result=false;
 
     return result;
@@ -1760,16 +1759,16 @@ bool simplify_exprt::simplify_inequality_constant(exprt &expr)
       mp_integer constant=0;
       bool changed=false;
 
-      Forall_operands(it, expr.op0())
+      for(exprt &operand : expr.op0().operands())
       {
-        if(it->is_constant())
+        if(operand.is_constant())
         {
           mp_integer i;
-          if(!to_integer(*it, i))
+          if(!to_integer(operand, i))
           {
             constant+=i;
-            *it=from_integer(0, it->type());
-            assert(it->is_not_nil());
+            operand=from_integer(0, operand.type());
+            assert(operand.is_not_nil());
             changed=true;
           }
         }

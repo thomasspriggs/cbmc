@@ -82,8 +82,8 @@ exprt c_typecheck_baset::do_initializer_rec(
     // adjust char type
     tmp.type().subtype()=full_type.subtype();
 
-    Forall_operands(it, tmp)
-      it->type()=full_type.subtype();
+    for(exprt &operand : tmp.operands())
+      operand.type()=full_type.subtype();
 
     if(full_type.id()==ID_array &&
        to_array_type(full_type).is_complete())

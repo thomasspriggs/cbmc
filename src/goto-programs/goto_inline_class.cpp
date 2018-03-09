@@ -267,8 +267,8 @@ void replace_location(
   exprt &dest,
   const source_locationt &new_location)
 {
-  Forall_operands(it, dest)
-    replace_location(*it, new_location);
+  for(exprt &operand : dest.operands())
+    replace_location(operand, new_location);
 
   if(dest.find(ID_C_source_location).is_not_nil())
     replace_location(dest.add_source_location(), new_location);

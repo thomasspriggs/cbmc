@@ -35,8 +35,8 @@ void java_bytecode_typecheckt::typecheck_expr(exprt &expr)
       ns);
 
   // do operands recursively
-  Forall_operands(it, expr)
-    typecheck_expr(*it);
+  for(exprt &operand : expr.operands())
+    typecheck_expr(operand);
 
   INVARIANT(
     expr.id() != ID_java_string_literal,

@@ -323,18 +323,18 @@ void acceleration_utilst::abstract_arrays(
   }
   else
   {
-    Forall_operands(it, expr)
+    for(exprt &operand : expr.operands())
     {
-      abstract_arrays(*it, abstractions);
+      abstract_arrays(operand, abstractions);
     }
   }
 }
 
 void acceleration_utilst::push_nondet(exprt &expr)
 {
-  Forall_operands(it, expr)
+  for(exprt &operand : expr.operands())
   {
-    push_nondet(*it);
+    push_nondet(operand);
   }
 
   if(expr.id()==ID_not &&

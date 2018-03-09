@@ -90,8 +90,8 @@ bool replace_symbolt::replace(
   }
   else
   {
-    Forall_operands(it, dest)
-      if(!replace(*it))
+    for(exprt &operand : dest.operands())
+      if(!replace(operand))
         result=false;
   }
 

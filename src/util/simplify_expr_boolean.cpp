@@ -225,10 +225,10 @@ bool simplify_exprt::simplify_not(exprt &expr)
     tmp.swap(op);
     expr.swap(tmp);
 
-    Forall_operands(it, expr)
+    for(exprt &operand : expr.operands())
     {
-      it->make_not();
-      simplify_node(*it);
+      operand.make_not();
+      simplify_node(operand);
     }
 
     expr.id(expr.id()==ID_and?ID_or:ID_and);

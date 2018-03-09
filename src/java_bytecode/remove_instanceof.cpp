@@ -58,8 +58,8 @@ std::size_t remove_instanceoft::lower_instanceof(
   if(expr.id()!=ID_java_instanceof)
   {
     std::size_t replacements=0;
-    Forall_operands(it, expr)
-      replacements+=lower_instanceof(*it, goto_program, this_inst);
+    for(exprt &operand : expr.operands())
+      replacements+=lower_instanceof(operand, goto_program, this_inst);
     return replacements;
   }
 

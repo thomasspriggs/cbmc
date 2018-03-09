@@ -616,8 +616,8 @@ void string_abstractiont::replace_string_macros(
     expr.swap(tmp);
   }
   else
-    Forall_operands(it, expr)
-      replace_string_macros(*it, lhs, source_location);
+    for(exprt &operand : expr.operands())
+      replace_string_macros(operand, lhs, source_location);
 }
 
 exprt string_abstractiont::build(

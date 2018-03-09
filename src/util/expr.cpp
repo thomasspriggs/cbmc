@@ -273,8 +273,8 @@ void exprt::visit(expr_visitort &visitor)
 
     visitor(expr);
 
-    Forall_operands(it, expr)
-      stack.push(&(*it));
+    for(exprt &operand : expr.operands())
+      stack.push(&operand);
   }
 }
 

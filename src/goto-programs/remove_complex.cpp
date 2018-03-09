@@ -128,8 +128,8 @@ static void remove_complex(exprt &expr)
     }
   }
 
-  Forall_operands(it, expr)
-    remove_complex(*it);
+  for(exprt &operand : expr.operands())
+    remove_complex(operand);
 
   if(expr.type().id()==ID_complex)
   {

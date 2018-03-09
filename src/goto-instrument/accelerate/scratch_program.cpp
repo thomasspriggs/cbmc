@@ -102,9 +102,9 @@ goto_programt::targett scratch_programt::assume(const exprt &guard)
 
 static void fix_types(exprt &expr)
 {
-  Forall_operands(it, expr)
+  for(exprt &operand : expr.operands())
   {
-    fix_types(*it);
+    fix_types(operand);
   }
 
   if(expr.id()==ID_equal ||

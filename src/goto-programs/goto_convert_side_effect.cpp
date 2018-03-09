@@ -421,8 +421,8 @@ void goto_convertt::replace_new_object(
   if(dest.id()=="new_object")
     dest=object;
   else
-    Forall_operands(it, dest)
-      replace_new_object(object, *it);
+    for(exprt &operand : dest.operands())
+      replace_new_object(object, operand);
 }
 
 void goto_convertt::remove_cpp_new(

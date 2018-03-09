@@ -625,10 +625,10 @@ exprt flatten_byte_operators(
   exprt tmp=src;
 
   // destroys any sharing, should use hash table
-  Forall_operands(it, tmp)
+  for(exprt &operand : tmp.operands())
   {
-    exprt tmp=flatten_byte_operators(*it, ns);
-    it->swap(tmp);
+    exprt tmp=flatten_byte_operators(operand, ns);
+    operand.swap(tmp);
   }
 
   if(src.id()==ID_byte_update_little_endian ||

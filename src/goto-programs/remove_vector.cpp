@@ -78,8 +78,8 @@ static void remove_vector(exprt &expr)
   if(!have_to_remove_vector(expr))
     return;
 
-  Forall_operands(it, expr)
-    remove_vector(*it);
+  for(exprt &operand : expr.operands())
+    remove_vector(operand);
 
   if(expr.type().id()==ID_vector)
   {

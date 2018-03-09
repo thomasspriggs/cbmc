@@ -404,8 +404,8 @@ void java_bytecode_instrumentt::instrument_code(codet &code)
   }
   else if(statement==ID_block)
   {
-    Forall_operands(it, code)
-      instrument_code(to_code(*it));
+    for(exprt &operand : code.operands())
+      instrument_code(to_code(operand));
   }
   else if(statement==ID_label)
   {

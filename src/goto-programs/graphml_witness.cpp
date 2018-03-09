@@ -44,8 +44,8 @@ void graphml_witnesst::remove_l0_l1(exprt &expr)
     return;
   }
 
-  Forall_operands(it, expr)
-    remove_l0_l1(*it);
+  for(exprt &operand : expr.operands())
+    remove_l0_l1(operand);
 }
 
 std::string graphml_witnesst::convert_assign_rec(

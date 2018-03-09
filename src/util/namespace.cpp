@@ -123,8 +123,8 @@ void namespace_baset::follow_macros(exprt &expr) const
     return;
   }
 
-  Forall_operands(it, expr)
-    follow_macros(*it);
+  for(exprt &operand : expr.operands())
+    follow_macros(operand);
 }
 
 unsigned namespacet::get_max(const std::string &prefix) const
