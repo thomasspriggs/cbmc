@@ -131,8 +131,8 @@ void concurrency_instrumentationt::instrument(
       instrument(code.function());
 
       // instrument(code.lhs(), LHS);
-      Forall_expr(it, code.arguments())
-        instrument(*it);
+      for(exprt &argument : code.arguments())
+        instrument(argument);
     }
   }
 }

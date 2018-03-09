@@ -1530,13 +1530,12 @@ void goto_program2codet::cleanup_code(
 
   if(code.has_operands())
   {
-    exprt::operandst &operands=code.operands();
-    Forall_expr(it, operands)
+    for(exprt &operand : code.operands())
     {
-      if(it->id()==ID_code)
-        cleanup_code(to_code(*it), code.get_statement());
+      if(operand.id()==ID_code)
+        cleanup_code(to_code(operand), code.get_statement());
       else
-        cleanup_expr(*it, false);
+        cleanup_expr(operand, false);
     }
   }
 
@@ -1594,10 +1593,10 @@ void goto_program2codet::cleanup_function_call(
     if(parameters.size()==arguments.size())
     {
       code_typet::parameterst::const_iterator it=parameters.begin();
-      Forall_expr(it2, arguments)
+      for(exprt &argument : arguments)
       {
-        if(ns.follow(it2->type()).id()==ID_union)
-          it2->type()=it->type();
+        if(ns.follow(argument.type()).id()==ID_union)
+          argument.type()=it->type();
         ++it;
       }
     }
