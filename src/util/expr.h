@@ -24,10 +24,6 @@ Author: Daniel Kroening, kroening@kroening.com
   for(exprt::operandst::const_iterator it=(expr).begin(); \
       it!=(expr).end(); ++it)
 
-#define Forall_expr(it, expr) \
-  for(exprt::operandst::iterator it=(expr).begin(); \
-      it!=(expr).end(); ++it)
-
 class depth_iteratort;
 class const_depth_iteratort;
 class const_unique_depth_iteratort;
