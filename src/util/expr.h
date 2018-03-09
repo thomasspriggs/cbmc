@@ -20,11 +20,6 @@ Author: Daniel Kroening, kroening@kroening.com
         it##_end=(expr).operands().end(); \
         it!=it##_end; ++it)
 
-#define Forall_operands(it, expr) \
-  if((expr).has_operands()) /* NOLINT(readability/braces) */ \
-    for(exprt::operandst::iterator it=(expr).operands().begin(); \
-        it!=(expr).operands().end(); ++it)
-
 #define forall_expr(it, expr) \
   for(exprt::operandst::const_iterator it=(expr).begin(); \
       it!=(expr).end(); ++it)
