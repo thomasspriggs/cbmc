@@ -193,8 +193,8 @@ void goto_program_dereferencet::dereference_rec(
     }
   }
 
-  Forall_operands(it, expr)
-    dereference_rec(*it, guard, mode);
+  for(exprt &operand : expr.operands())
+    dereference_rec(operand, guard, mode);
 
   if(expr.id()==ID_dereference)
   {
@@ -327,8 +327,8 @@ void goto_program_dereferencet::dereference_instruction(
   }
   else if(i.is_return())
   {
-    Forall_operands(it, i.code)
-      dereference_expr(*it, checks_only, value_set_dereferencet::modet::READ);
+    for(exprt &operand : i.code.operands())
+      dereference_expr(operand, checks_only, value_set_dereferencet::modet::READ);
   }
   else if(i.is_other())
   {
@@ -344,9 +344,9 @@ void goto_program_dereferencet::dereference_instruction(
     }
     else if(statement==ID_printf)
     {
-      Forall_operands(it, i.code)
+      for(exprt &operand : i.code.operands())
         dereference_expr(
-          *it, checks_only, value_set_dereferencet::modet::READ);
+          operand, checks_only, value_set_dereferencet::modet::READ);
     }
   }
 }

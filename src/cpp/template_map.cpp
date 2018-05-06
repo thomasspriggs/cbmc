@@ -83,8 +83,8 @@ void template_mapt::apply(exprt &expr) const
     }
   }
 
-  Forall_operands(it, expr)
-    apply(*it);
+  for(exprt &operand : expr.operands())
+    apply(operand);
 }
 
 exprt template_mapt::lookup(const irep_idt &identifier) const

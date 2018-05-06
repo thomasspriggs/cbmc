@@ -1502,8 +1502,8 @@ void goto_program2codet::cleanup_code(
       cleanup_expr(code.op1(), false);
     }
     else
-      Forall_operands(it, code)
-        cleanup_expr(*it, true);
+      for(exprt &operand : code.operands())
+        cleanup_expr(operand, true);
 
     if(code.op0().type().id()==ID_array)
       cleanup_expr(to_array_type(code.op0().type()).size(), true);
@@ -1830,20 +1830,20 @@ void goto_program2codet::cleanup_expr(exprt &expr, bool no_typecast)
   if(no_typecast &&
      (expr.id()==ID_address_of || expr.id()==ID_member))
   {
-    Forall_operands(it, expr)
-      cleanup_expr(*it, false);
+    for(exprt &operand : expr.operands())
+      cleanup_expr(operand, false);
   }
   else if(!no_typecast &&
           (expr.id()==ID_union || expr.id()==ID_struct ||
            expr.id()==ID_array || expr.id()==ID_vector))
   {
-    Forall_operands(it, expr)
-      cleanup_expr(*it, true);
+    for(exprt &operand : expr.operands())
+      cleanup_expr(operand, true);
   }
   else
   {
-    Forall_operands(it, expr)
-      cleanup_expr(*it, no_typecast);
+    for(exprt &operand : expr.operands())
+      cleanup_expr(operand, no_typecast);
   }
 
   // work around transparent union argument

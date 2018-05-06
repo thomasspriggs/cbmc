@@ -145,8 +145,8 @@ void jsil_typecheckt::typecheck_expr(exprt &expr)
 
 void jsil_typecheckt::typecheck_expr_operands(exprt &expr)
 {
-  Forall_operands(it, expr)
-    typecheck_expr(*it);
+  for(exprt &operand : expr.operands())
+    typecheck_expr(operand);
 }
 
 void jsil_typecheckt::typecheck_expr_main(exprt &expr)
@@ -702,8 +702,8 @@ void jsil_typecheckt::typecheck_return(code_returnt &code)
 
 void jsil_typecheckt::typecheck_block(codet &code)
 {
-  Forall_operands(it, code)
-    typecheck_code(to_code(*it));
+  for(exprt &operand : code.operands())
+    typecheck_code(to_code(operand));
 }
 
 void jsil_typecheckt::typecheck_try_catch(code_try_catcht &code)

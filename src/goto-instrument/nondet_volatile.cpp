@@ -36,8 +36,8 @@ bool is_volatile(
 
 void nondet_volatile_rhs(const symbol_tablet &symbol_table, exprt &expr)
 {
-  Forall_operands(it, expr)
-    nondet_volatile_rhs(symbol_table, *it);
+  for(exprt &operand : expr.operands())
+    nondet_volatile_rhs(symbol_table, operand);
 
   if(expr.id()==ID_symbol ||
      expr.id()==ID_dereference)

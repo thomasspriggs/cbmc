@@ -176,8 +176,8 @@ void cpp_typecheckt::typecheck_member_initializer(codet &code)
     to_cpp_name(code.find(ID_member));
 
   // Let's first typecheck the operands.
-  Forall_operands(it, code)
-    typecheck_expr(*it);
+  for(exprt &operand : code.operands())
+    typecheck_expr(operand);
 
   // The initializer may be a data member (non-type)
   // or a parent class (type).
@@ -323,8 +323,8 @@ void cpp_typecheckt::typecheck_member_initializer(codet &code)
         // it's a data member
         already_typechecked(symbol_expr);
 
-        Forall_operands(it, code)
-          already_typechecked(*it);
+        for(exprt &operand : code.operands())
+          already_typechecked(operand);
 
         exprt call=
           cpp_constructor(code.source_location(), symbol_expr, code.operands());

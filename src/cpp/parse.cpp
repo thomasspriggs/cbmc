@@ -6125,8 +6125,8 @@ bool Parser::rPostfixExpr(exprt &exp)
         fc.arguments().reserve(e.operands().size());
         set_location(fc, op);
 
-        Forall_operands(it, e)
-          fc.arguments().push_back(*it);
+        for(exprt &operand : e.operands())
+          fc.arguments().push_back(operand);
         e.operands().clear(); // save some
         exp.swap(fc);
       }

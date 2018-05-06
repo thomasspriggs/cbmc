@@ -303,8 +303,8 @@ bool value_sett::eval_pointer_offset(
   }
   else
   {
-    Forall_operands(it, expr)
-      mod=eval_pointer_offset(*it, ns) || mod;
+    for(exprt &operand : expr.operands())
+      mod=eval_pointer_offset(operand, ns) || mod;
   }
 
   return mod;

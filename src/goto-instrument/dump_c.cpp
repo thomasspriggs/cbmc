@@ -937,9 +937,9 @@ void dump_ct::cleanup_harness(code_blockt &b)
     decls.add(d);
   }
 
-  Forall_operands(it, b)
+  for(exprt &operand : b.operands())
   {
-    codet &code=to_code(*it);
+    codet &code=to_code(operand);
 
     if(code.get_statement()==ID_function_call)
     {
@@ -1208,8 +1208,8 @@ void dump_ct::insert_local_type_decls(
 
 void dump_ct::cleanup_expr(exprt &expr)
 {
-  Forall_operands(it, expr)
-    cleanup_expr(*it);
+  for(exprt &operand : expr.operands())
+    cleanup_expr(operand);
 
   cleanup_type(expr.type());
 

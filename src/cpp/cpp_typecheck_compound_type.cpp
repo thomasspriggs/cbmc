@@ -958,12 +958,12 @@ void cpp_typecheckt::typecheck_compound_body(symbolt &symbol)
 
   // we first do everything _but_ the constructors
 
-  Forall_operands(it, body)
+  for(exprt &operand : body.operands())
   {
-    if(it->id()==ID_cpp_declaration)
+    if(operand.id()==ID_cpp_declaration)
     {
       cpp_declarationt &declaration=
-        to_cpp_declaration(*it);
+        to_cpp_declaration(operand);
 
       if(declaration.member_spec().is_friend())
       {
@@ -1048,11 +1048,11 @@ void cpp_typecheckt::typecheck_compound_body(symbolt &symbol)
           access, is_static, is_typedef, is_mutable);
       }
     }
-    else if(it->id()=="cpp-public")
+    else if(operand.id()=="cpp-public")
       access=ID_public;
-    else if(it->id()=="cpp-private")
+    else if(operand.id()=="cpp-private")
       access=ID_private;
-    else if(it->id()=="cpp-protected")
+    else if(operand.id()=="cpp-protected")
       access=ID_protected;
     else
     {
@@ -1097,12 +1097,12 @@ void cpp_typecheckt::typecheck_compound_body(symbolt &symbol)
 
   // All the data members are now known.
   // We now deal with the constructors that we are given.
-  Forall_operands(it, body)
+  for(exprt &operand : body.operands())
   {
-    if(it->id()==ID_cpp_declaration)
+    if(operand.id()==ID_cpp_declaration)
     {
       cpp_declarationt &declaration=
-        to_cpp_declaration(*it);
+        to_cpp_declaration(operand);
 
       if(!declaration.is_constructor())
         continue;
@@ -1142,11 +1142,11 @@ void cpp_typecheckt::typecheck_compound_body(symbolt &symbol)
           access, is_static, is_typedef, is_mutable);
       }
     }
-    else if(it->id()=="cpp-public")
+    else if(operand.id()=="cpp-public")
       access=ID_public;
-    else if(it->id()=="cpp-private")
+    else if(operand.id()=="cpp-private")
       access=ID_private;
-    else if(it->id()=="cpp-protected")
+    else if(operand.id()=="cpp-protected")
       access=ID_protected;
     else
     {

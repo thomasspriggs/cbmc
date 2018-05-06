@@ -4726,8 +4726,8 @@ void smt2_convt::collect_bindings(
   if(expr.operands().empty())
     return;
 
-  Forall_operands(it, expr)
-    collect_bindings(*it, map, let_order);
+  for(exprt &operand : expr.operands())
+    collect_bindings(operand, map, let_order);
 
   assert(map.find(expr)==map.end());
 
@@ -4748,8 +4748,8 @@ exprt smt2_convt::substitute_let(
 
   let_visitort lv(map);
 
-  Forall_operands(it, expr)
-    it->visit(lv);
+  for(exprt &operand : expr.operands())
+    operand.visit(lv);
 
   return expr;
 }
