@@ -187,6 +187,8 @@ public:
     }
   };
 
+  std::list<irep_idt> find_main_identifiers(const irep_idt &identifier);
+
   virtual iteratort begin() = 0;
   virtual iteratort end() = 0;
 };

@@ -16,6 +16,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <goto-programs/goto_functions.h>
 
 #include <linking/static_lifetime_init.h>
+#include <algorithm>
 
 #include "c_nondet_symbol_factory.h"
 
@@ -128,18 +129,30 @@ bool ansi_c_entry_point(
 
     const auto &main_range =
       symbol_table.symbol_base_map.equal_range(config.main);
-    for(const auto &it : {main_range.first, main_range.second})
-    {
-      // look it up
-      symbol_tablet::symbolst::const_iterator s_it=
-        symbol_table.symbols.find(it->second);
 
-      if(s_it==symbol_table.symbols.end())
-        continue;
+    std::list<const symbolt*> main_symbols;
+    std::transform(
+      main_range.first,
+      main_range.second,
+      std::inserter(main_symbols, main_symbols.end()),
+      [&symbol_table](const std::pair<irep_idt, irep_idt> &identifier_pair) {
+        return symbol_table.lookup(identifier_pair.second);
+      });
 
-      if(s_it->second.type.id()==ID_code)
-        matches.push_back(it->second);
-    }
+    std::remove_if(
+      main_symbols.begin(),
+      main_symbols.end(),
+      [&symbol_table](const symbolt *main_symbol) {
+        return main_symbol == nullptr || main_symbol->type.id() != ID_code;
+      });
+
+    std::transform(
+      main_symbols.begin(),
+      main_symbols.end(),
+      std::inserter(matches, matches.end()),
+      [](const symbolt *main_symbol) {
+        return main_symbol->name;
+      });
 
     if(matches.empty())
     {
