@@ -280,8 +280,8 @@ std::list<exprt> expressions_read(
     {
       const code_function_callt &function_call=
         to_code_function_call(instruction.code);
-      forall_expr(it, function_call.arguments())
-        dest.push_back(*it);
+      for(const exprt &argument : function_call.arguments())
+        dest.push_back(argument);
       if(function_call.lhs().is_not_nil())
         parse_lhs_read(function_call.lhs(), dest);
     }

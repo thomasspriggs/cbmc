@@ -1225,11 +1225,11 @@ exprt goto_convertt::case_guard(
   exprt dest=exprt(ID_or, bool_typet());
   dest.reserve_operands(case_op.size());
 
-  forall_expr(it, case_op)
+  for(const exprt &operand : case_op)
   {
     equal_exprt eq_expr;
     eq_expr.lhs()=value;
-    eq_expr.rhs()=*it;
+    eq_expr.rhs()=operand;
     dest.move_to_operands(eq_expr);
   }
 

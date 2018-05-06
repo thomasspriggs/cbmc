@@ -2377,13 +2377,17 @@ std::string expr2ct::convert_function_application(
 
   dest+='(';
 
-  forall_expr(it, src.arguments())
+  bool is_first = true;
+  for(const exprt &argument : src.arguments())
   {
     unsigned p;
-    std::string arg_str=convert_with_precedence(*it, p);
+    std::string arg_str=convert_with_precedence(argument, p);
 
-    if(it!=src.arguments().begin())
+    if(!is_first)
       dest+=", ";
+    else
+      is_first = false;
+
     // TODO: ggf. Klammern je nach p
     dest+=arg_str;
   }
@@ -2407,13 +2411,17 @@ std::string expr2ct::convert_side_effect_expr_function_call(
 
   dest+='(';
 
-  forall_expr(it, src.arguments())
+  bool is_first = true;
+  for(const exprt &argument : src.arguments())
   {
     unsigned p;
-    std::string arg_str=convert_with_precedence(*it, p);
+    std::string arg_str=convert_with_precedence(argument, p);
 
-    if(it!=src.arguments().begin())
+    if(!is_first)
       dest+=", ";
+    else
+      is_first = false;
+
     // TODO: ggf. Klammern je nach p
     dest+=arg_str;
   }
@@ -3107,13 +3115,18 @@ std::string expr2ct::convert_code_function_call(
 
   const exprt::operandst &arguments=src.arguments();
 
-  forall_expr(it, arguments)
+  //for (exprt::operandst::const_iterator it = arguments.begin(); it != arguments.end(); ++it)
+  bool is_first = true;
+  for(const exprt &argument : arguments )
   {
     unsigned p;
-    std::string arg_str=convert_with_precedence(*it, p);
+    std::string arg_str=convert_with_precedence(argument, p);
 
-    if(it!=arguments.begin())
+    if(!is_first)
       dest+=", ";
+    else
+      is_first = false;
+
     // TODO: ggf. Klammern je nach p
     dest+=arg_str;
   }

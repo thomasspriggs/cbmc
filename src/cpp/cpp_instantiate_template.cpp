@@ -83,26 +83,26 @@ std::string cpp_typecheckt::template_suffix(
 
 void cpp_typecheckt::show_instantiation_stack(std::ostream &out)
 {
-  for(instantiation_stackt::const_iterator
-      s_it=instantiation_stack.begin();
-      s_it!=instantiation_stack.end();
-      s_it++)
+  for(const auto &instantiation : instantiation_stack)
   {
-    const symbolt &symbol=lookup(s_it->identifier);
+    const symbolt &symbol=lookup(instantiation.identifier);
     out << "instantiating `" << symbol.pretty_name << "' with <";
 
-    forall_expr(a_it, s_it->full_template_args.arguments())
+    bool is_first = true;
+    for(const exprt &argument : instantiation.full_template_args.arguments())
     {
-      if(a_it!=s_it->full_template_args.arguments().begin())
+      if(!is_first)
         out << ", ";
-
-      if(a_it->id()==ID_type)
-        out << to_string(a_it->type());
       else
-        out << to_string(*a_it);
+        is_first = false;
+
+      if(argument.id()==ID_type)
+        out << to_string(argument.type());
+      else
+        out << to_string(argument);
     }
 
-    out << "> at " << s_it->source_location << '\n';
+    out << "> at " << instantiation.source_location << '\n';
   }
 }
 

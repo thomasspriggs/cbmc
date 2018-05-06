@@ -709,8 +709,8 @@ void goto_rw(goto_programt::const_targett target,
     rw_range_sett::get_modet::READ,
     function_call.function());
 
-  forall_expr(it, function_call.arguments())
-    rw_set.get_objects_rec(target, rw_range_sett::get_modet::READ, *it);
+  for(const exprt &argument : function_call.arguments())
+    rw_set.get_objects_rec(target, rw_range_sett::get_modet::READ, argument);
 }
 
 void goto_rw(goto_programt::const_targett target,
@@ -747,8 +747,8 @@ void goto_rw(goto_programt::const_targett target,
     // if it's printf, mark the operands as read here
     if(target->code.get(ID_statement)==ID_printf)
     {
-      forall_expr(it, target->code.operands())
-        rw_set.get_objects_rec(target, rw_range_sett::get_modet::READ, *it);
+      for(const exprt &operand : target->code.operands())
+        rw_set.get_objects_rec(target, rw_range_sett::get_modet::READ, operand);
     }
     break;
 
