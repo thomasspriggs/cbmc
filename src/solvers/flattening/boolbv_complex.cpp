@@ -27,15 +27,15 @@ bvt boolbvt::convert_complex(const exprt &expr)
     {
       std::size_t op_width=width/operands.size();
 
-      forall_expr(it, operands)
+      for(const exprt &operand : operands)
       {
-        const bvt &tmp=convert_bv(*it);
+        const bvt &tmp=convert_bv(operand);
 
         if(tmp.size()!=op_width)
           throw "convert_complex: unexpected operand width";
 
-        forall_literals(it2, tmp)
-          bv.push_back(*it2);
+        for(const literalt &literal : tmp)
+          bv.push_back(literal);
       }
     }
 

@@ -726,9 +726,10 @@ void cvc_convt::convert_expr(const exprt &expr)
       convert_expr(op[0]);
     else
     {
-      forall_expr(it, op)
+      bool is_first = true;
+      for(const exprt &operand : op)
       {
-        if(it!=op.begin())
+        if(!is_first)
         {
           if(expr.id()==ID_or)
             out << " OR ";
@@ -743,9 +744,11 @@ void cvc_convt::convert_expr(const exprt &expr)
           else
             assert(false);
         }
+        else
+          is_first = false;
 
         out << "(";
-        convert_expr(*it);
+        convert_expr(operand);
         out << ")";
       }
     }

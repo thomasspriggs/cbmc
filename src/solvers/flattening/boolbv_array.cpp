@@ -26,15 +26,15 @@ bvt boolbvt::convert_array(const exprt &expr)
     bvt bv;
     bv.reserve(width);
 
-    forall_expr(it, operands)
+    for(const exprt &operand : operands)
     {
-      const bvt &tmp=convert_bv(*it);
+      const bvt &tmp=convert_bv(operand);
 
       if(tmp.size()!=op_width)
         throw "convert_array: unexpected operand width";
 
-      forall_literals(it2, tmp)
-        bv.push_back(*it2);
+      for(const literalt &literal : tmp)
+        bv.push_back(literal);
     }
 
     return bv;

@@ -266,8 +266,8 @@ literalt prop_conv_solvert::convert_bool(const exprt &expr)
 
     bvt bv;
 
-    forall_expr(it, op)
-      bv.push_back(convert(*it));
+    for(const exprt &operand : op)
+      bv.push_back(convert(operand));
 
     if(!bv.empty())
     {
