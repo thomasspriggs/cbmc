@@ -81,23 +81,24 @@ std::string expr2javat::convert_code_function_call(
   const exprt::operandst &arguments=src.arguments();
 
   bool first=true;
+  bool is_this = has_this;
 
-  forall_expr(it, arguments)
+  for(const auto &argument : arguments)
   {
-    if(has_this && it==arguments.begin())
+    if(is_this)
     {
+      is_this = false;
+      continue;
     }
-    else
-    {
+
       unsigned p;
-      std::string arg_str=convert_with_precedence(*it, p);
+      std::string arg_str=convert_with_precedence(argument, p);
 
       if(first)
         first=false;
       else
         dest+=", ";
       dest+=arg_str;
-    }
   }
 
   dest+=");";
