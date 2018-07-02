@@ -111,12 +111,12 @@ class java_class_typet:public class_typet
     return set(ID_access, access);
   }
 
-  const irep_idt &get_inner_class() const
+  const bool get_is_inner_class() const
   {
-    return get(ID_is_inner_class);
+    return get_bool(ID_is_inner_class);
   }
 
-  void set_inner_class(const bool &is_inner_class)
+  void set_is_inner_class(const bool &is_inner_class)
   {
     return set(ID_is_inner_class, is_inner_class);
   }
