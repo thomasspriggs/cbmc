@@ -10,6 +10,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <string>
 
+#include <linking/static_lifetime_init.h>
+
 #include <util/cmdline.h>
 #include <util/config.h>
 #include <util/expr_iterator.h>
@@ -880,6 +882,7 @@ bool java_bytecode_languaget::typecheck(
     {
       convert_single_method(method_sig.first, journalling_symbol_table);
     }
+    convert_single_method(INITIALIZE_FUNCTION, journalling_symbol_table);
     // Now convert all newly added string methods
     for(const auto &fn_name : journalling_symbol_table.get_inserted())
     {
@@ -1026,6 +1029,7 @@ void java_bytecode_languaget::methods_provided(
   // Add all synthetic methods to map
   for(const auto &kv : synthetic_methods)
     methods.insert(kv.first);
+  methods.insert(INITIALIZE_FUNCTION);
 }
 
 /// \brief Promote a lazy-converted method (one whose type is known but whose
@@ -1050,7 +1054,7 @@ void java_bytecode_languaget::convert_lazy_method(
   convert_single_method(function_id, symbol_table);
 
   // Instrument runtime exceptions (unless symbol is a stub)
-  if(symbol.value.is_not_nil())
+  if(symbol.value.is_not_nil() && function_id != INITIALIZE_FUNCTION)
   {
     java_bytecode_instrument_symbol(
       symbol_table,
@@ -1131,6 +1135,20 @@ bool java_bytecode_languaget::convert_single_method(
   // Nothing to do if body is already loaded
   if(symbol.value.is_not_nil())
     return false;
+
+  if(function_id == INITIALIZE_FUNCTION)
+  {
+    java_static_lifetime_init(
+      symbol_table,
+      symbol.location,
+      assume_inputs_non_null,
+      object_factory_parameters,
+      *pointer_type_selector,
+      string_refinement_enabled,
+      get_message_handler());
+    return false;
+  }
+
   INVARIANT(declaring_class(symbol), "Method must have a declaring class.");
 
   // Get bytecode for specified function if we have it

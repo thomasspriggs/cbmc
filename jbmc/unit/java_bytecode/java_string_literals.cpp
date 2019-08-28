@@ -6,7 +6,7 @@ Author: Diffblue Limited
 
 \*******************************************************************/
 
-#include <java_bytecode/java_entry_point.h>
+#include <java_bytecode/java_bytecode_internal_additions.h>
 #include <java_bytecode/java_string_literals.h>
 #include <java_bytecode/java_types.h>
 #include <java_bytecode/java_utils.h>

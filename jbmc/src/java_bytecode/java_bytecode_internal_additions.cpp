@@ -12,9 +12,25 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "java_types.h"
 #include "remove_exceptions.h"
 
+#include <linking/static_lifetime_init.h>
 #include <util/std_types.h>
 #include <util/cprover_prefix.h>
 #include <util/c_types.h>
+
+void create_java_initialize(symbol_table_baset &symbol_table)
+{
+  // If __CPROVER_initialize already exists, replace it. It may already exist
+  // if a GOTO binary provided it. This behaviour mirrors the ANSI-C frontend.
+  symbol_table.remove(INITIALIZE_FUNCTION);
+
+  symbolt initialize;
+  initialize.name=INITIALIZE_FUNCTION;
+  initialize.base_name=INITIALIZE_FUNCTION;
+  initialize.mode=ID_java;
+
+  initialize.type = java_method_typet({}, java_void_type());
+  symbol_table.add(initialize);
+}
 
 void java_internal_additions(symbol_table_baset &dest)
 {
@@ -58,4 +74,6 @@ void java_internal_additions(symbol_table_baset &dest)
     symbol.is_static_lifetime = true;
     dest.add(symbol);
   }
+
+  create_java_initialize(dest);
 }
