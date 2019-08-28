@@ -145,18 +145,14 @@ static void java_static_lifetime_init(
   // external. Iterate over a copy of the symtab, as its iterators are
   // invalidated by object_factory:
 
+  // `symbol_names` is a `std::list` so that is it compatible with inserting
+  // whilst iterating.
   std::list<irep_idt> symbol_names;
   for(const auto &entry : symbol_table.symbols)
     symbol_names.push_back(entry.first);
 
-  // Don't use a for-each loop here because the loop extends the list, and the
-  // for-each loop may only read `.end()` once.
-  for(
-    auto symbol_it = symbol_names.begin();
-    symbol_it != symbol_names.end();
-    ++symbol_it)
+  for(const irep_idt &symname : symbol_names)
   {
-    const auto &symname = *symbol_it;
     const symbolt &sym = symbol_table.lookup_ref(symname);
     if(!should_init_symbol(sym))
       continue;
