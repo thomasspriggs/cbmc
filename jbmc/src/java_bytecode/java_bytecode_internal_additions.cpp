@@ -45,6 +45,7 @@ void java_internal_additions(symbol_table_baset &dest)
     symbol.is_lvalue=true;
     symbol.is_state_var=true;
     symbol.is_thread_local=true;
+    symbol.is_static_lifetime = true;
     dest.add(symbol);
   }
 
