@@ -1101,11 +1101,6 @@ static void notify_static_method_calls(
   }
 }
 
-#include <iostream>
-#define WATCHVAR( var ) \
-    	  std::cerr << "DBG: " << __FILE__ << "(" << __LINE__ << ") " << #var << \
-    	    " = [" << (var) << "]" << std::endl
-
 /// \brief Convert a method (one whose type is known but whose body hasn't
 ///   been converted) but don't run typecheck, etc
 /// \remarks Amends the symbol table entry for function `function_id`, which
@@ -1120,9 +1115,6 @@ bool java_bytecode_languaget::convert_single_method(
   symbol_table_baset &symbol_table,
   optionalt<ci_lazy_methods_neededt> needed_lazy_methods)
 {
-  const auto &converting_method = function_id;
-  WATCHVAR(converting_method);
-
   // Do not convert if method is not in context
   if(method_in_context && !(*method_in_context)(id2string(function_id)))
   {

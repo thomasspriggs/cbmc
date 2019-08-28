@@ -35,18 +35,12 @@ static array_exprt utf16_to_array(const std::wstring &in)
   return ret;
 }
 
-#include <iostream>
-#define WATCHVAR(var)                                                          \
-  std::cerr << "DBG: " << __FILE__ << "(" << __LINE__ << ") " << #var          \
-            << " = [" << (var) << "]" << std::endl
-
 symbol_exprt get_or_create_string_literal_symbol(
   const java_string_literal_exprt &string_expr,
   symbol_table_baset &symbol_table,
   bool string_refinement_enabled)
 {
   const irep_idt value = string_expr.value();
-  //WATCHVAR(value);
   const struct_tag_typet string_type("java::java.lang.String");
 
   const std::string escaped_symbol_name = escape_non_alnum(id2string(value));
@@ -54,7 +48,6 @@ symbol_exprt get_or_create_string_literal_symbol(
     JAVA_STRING_LITERAL_PREFIX "." + escaped_symbol_name;
 
   auto findit = symbol_table.symbols.find(escaped_symbol_name_with_prefix);
-  //WATCHVAR(findit != symbol_table.symbols.end());
   if(findit != symbol_table.symbols.end())
     return findit->second.symbol_expr();
 
