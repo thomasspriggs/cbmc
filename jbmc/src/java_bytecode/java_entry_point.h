@@ -186,4 +186,14 @@ std::pair<code_blockt, std::vector<exprt>> java_build_arguments(
   const select_pointer_typet &pointer_type_selector,
   message_handlert &message_handler);
 
+/// Adds the body to __CPROVER_initialize
+void java_static_lifetime_init(
+  symbol_table_baset &symbol_table,
+  const source_locationt &source_location,
+  bool assume_init_pointers_not_null,
+  java_object_factory_parameterst object_factory_parameters,
+  const select_pointer_typet &pointer_type_selector,
+  bool string_refinement_enabled,
+  message_handlert &message_handler);
+
 #endif // CPROVER_JAVA_BYTECODE_JAVA_ENTRY_POINT_H

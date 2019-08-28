@@ -53,19 +53,6 @@ static void create_initialize(symbol_table_baset &symbol_table)
   initialize.mode=ID_java;
 
   initialize.type = java_method_typet({}, java_void_type());
-
-  code_blockt init_code;
-
-  namespacet ns(symbol_table);
-
-  symbol_exprt rounding_mode=
-    ns.lookup(CPROVER_PREFIX "rounding_mode").symbol_expr();
-
-  init_code.add(
-    code_assignt(rounding_mode, from_integer(0, rounding_mode.type())));
-
-  initialize.value=init_code;
-
   symbol_table.add(initialize);
 }
 
@@ -116,7 +103,7 @@ static constant_exprt constant_bool(bool val)
   return from_integer(val ? 1 : 0, java_boolean_type());
 }
 
-static void java_static_lifetime_init(
+void java_static_lifetime_init(
   symbol_table_baset &symbol_table,
   const source_locationt &source_location,
   bool assume_init_pointers_not_null,
@@ -127,7 +114,14 @@ static void java_static_lifetime_init(
 {
   symbolt &initialize_symbol =
     symbol_table.get_writeable_ref(INITIALIZE_FUNCTION);
-  code_blockt &code_block=to_code_block(to_code(initialize_symbol.value));
+  PRECONDITION(initialize_symbol.value.is_nil());
+
+  code_blockt code_block;
+  const symbol_exprt rounding_mode =
+    symbol_table.lookup_ref(CPROVER_PREFIX "rounding_mode").symbol_expr();
+  code_block.add(
+    code_assignt(rounding_mode, from_integer(0, rounding_mode.type())));
+
   object_factory_parameters.function_id = initialize_symbol.name;
 
   // If there are strings given using --string-input-value, we need to add
@@ -262,6 +256,7 @@ static void java_static_lifetime_init(
       code_block.add(assignment);
     }
   }
+  initialize_symbol.value = code_block;
 }
 
 /// Checks whether the given symbol is a valid java main method
@@ -592,15 +587,6 @@ bool java_entry_point(
   assert(symbol.type.id()==ID_code);
 
   create_initialize(symbol_table);
-
-  java_static_lifetime_init(
-    symbol_table,
-    symbol.location,
-    assume_init_pointers_not_null,
-    object_factory_parameters,
-    pointer_type_selector,
-    string_refinement_enabled,
-    message_handler);
 
   return generate_java_start_function(
     symbol,
