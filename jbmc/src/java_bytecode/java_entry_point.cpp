@@ -98,6 +98,26 @@ static const symbolt *get_class_literal_initializer(
   return symbol_table.lookup(get_java_class_literal_initializer_signature());
 }
 
+
+    	#include <iostream>
+    	#define WATCHVAR( var ) \
+    	  std::cerr << "DBG: " << __FILE__ << "(" << __LINE__ << ") " << #var << \
+    	    " = [" << (var) << "]" << std::endl
+
+/*static code_blockt
+java_default_initialization(const symbol_table_baset &symbol_table)
+{
+  return code_blockt::from_list(
+    make_range(symbol_table.symbols)
+      .map([](decltype(*symbol_table.symbols.begin()) &symbol_pair) {
+        return symbol_pair.second;
+      })
+      .filter(should_init_symbol)
+      .map([](const symbolt &symbol) {
+        return code_assignt{symbol.symbol_expr(), symbol.value};
+      }));
+}*/
+
 static constant_exprt constant_bool(bool val)
 {
   return from_integer(val ? 1 : 0, java_boolean_type());
@@ -561,6 +581,23 @@ main_function_resultt get_main_symbol(
   }
 }
 
+// If there are strings given using --string-input-value, we  add
+// them to the symbol table, so that they appear in __CPROVER_initialize
+// and we can refer to them later when we initialize input values.
+//static void create_string_input_values(
+//  symbol_table_baset &symbol_table,
+//  const std::list<std::string> &string_input_values,
+//  bool string_refinement_enabled)
+//{
+//  for(const auto &val : string_input_values)
+//  {
+//    // We ignore the return value of the following call, we just need to
+//    // make sure the string is in the symbol table.
+//    get_or_create_string_literal_symbol(
+//      val, symbol_table, string_refinement_enabled);
+//  }
+//}
+
 bool java_entry_point(
   symbol_table_baset &symbol_table,
   const irep_idt &main_class,
@@ -586,7 +623,20 @@ bool java_entry_point(
 
   assert(symbol.type.id()==ID_code);
 
+  //create_string_input_values(
+  //  symbol_table,
+  //  object_factory_parameters.string_input_values,
+  //  string_refinement_enabled);
+
   create_initialize(symbol_table);
+  //java_static_lifetime_init(
+  //  symbol_table,
+  //  symbol.location,
+  //  assume_init_pointers_not_null,
+  //  object_factory_parameters,
+  //  pointer_type_selector,
+  //  string_refinement_enabled,
+  //  message_handler);
 
   return generate_java_start_function(
     symbol,

@@ -493,6 +493,11 @@ static void assign_array_from_json(
   assign_array_data_component_from_json(expr, json, type_from_array, info);
 }
 
+#include <iostream>
+#define WATCHVAR(var)                                                          \
+  std::cerr << "DBG: " << __FILE__ << "(" << __LINE__ << ") " << #var          \
+            << " = [" << (var) << "]" << std::endl
+
 /// One of the cases in the recursive algorithm: the case where \p expr
 /// represents a string.
 /// See \ref assign_from_json_rec.
@@ -501,8 +506,9 @@ static void assign_string_from_json(
   const exprt &expr,
   object_creation_infot &info)
 {
-  const auto json_string = get_untyped_string(json);
+  const jsont json_string = get_untyped_string(json);
   PRECONDITION(json_string.is_string());
+  WATCHVAR(json_string.value);
   info.block.add(code_assignt{expr,
                               get_or_create_string_literal_symbol(
                                 json_string.value, info.symbol_table, true)});
@@ -661,6 +667,9 @@ static void assign_pointer_with_given_type_from_json(
     pointer_to_replacement_type(pointer_type, runtime_type);
   if(!equal_java_types(pointer_type, replacement_pointer_type))
   {
+    WATCHVAR(json);
+    WATCHVAR(pointer_type.pretty(0,0));
+    WATCHVAR(replacement_pointer_type.pretty(0,0));
     const auto &new_symbol =
       info.allocate_objects.allocate_automatic_local_object(
         replacement_pointer_type, "user_specified_subtype_symbol");
