@@ -41,21 +41,6 @@ static codet record_exception(
   const symbolt &function,
   const symbol_table_baset &symbol_table);
 
-static void create_initialize(symbol_table_baset &symbol_table)
-{
-  // If __CPROVER_initialize already exists, replace it. It may already exist
-  // if a GOTO binary provided it. This behaviour mirrors the ANSI-C frontend.
-  symbol_table.remove(INITIALIZE_FUNCTION);
-
-  symbolt initialize;
-  initialize.name=INITIALIZE_FUNCTION;
-  initialize.base_name=INITIALIZE_FUNCTION;
-  initialize.mode=ID_java;
-
-  initialize.type = java_method_typet({}, java_void_type());
-  symbol_table.add(initialize);
-}
-
 static bool should_init_symbol(const symbolt &sym)
 {
   if(sym.type.id()!=ID_code &&
@@ -585,8 +570,6 @@ bool java_entry_point(
   symbolt symbol=res.main_function;
 
   assert(symbol.type.id()==ID_code);
-
-  create_initialize(symbol_table);
 
   return generate_java_start_function(
     symbol,
