@@ -6,8 +6,8 @@
 #include <java_bytecode/java_static_initializers.h>
 #include <java_bytecode/remove_dead_globals.h>
 #include <java_bytecode/remove_exceptions.h>
+#include <java_bytecode/select_pointer_type.h>
 #include <linking/static_lifetime_init.h>
-#include <test-java-gen/smart_select_pointer_type.h>
 #include <util/range.h>
 
 bool add_instantiated_type(
@@ -107,7 +107,8 @@ bool convert_and_analyze_method(
   std::unordered_set<irep_idt> &methods_to_convert_later,
   std::unordered_set<irep_idt> &instantiated_classes,
   std::unordered_set<exprt, irep_hash> &virtual_function_calls,
-  const class_hierarchyt &class_hierarchy)
+  const class_hierarchyt &class_hierarchy,
+  const select_pointer_typet &pointer_selector)
 {
   const auto &symbol_table = goto_model.get_symbol_table();
 
@@ -133,9 +134,8 @@ bool convert_and_analyze_method(
     if(const auto return_pointer = type_try_dynamic_cast<pointer_typet>(
          to_code_type(method_symbol.type).return_type()))
     {
-      smart_select_pointer_typet select_pointer_type{true};
       ci_lazy_methods_neededt stub_methods_and_types{
-        methods_to_convert_later, instantiated_classes, symbol_table, select_pointer_type};
+        methods_to_convert_later, instantiated_classes, symbol_table, pointer_selector};
       stub_methods_and_types.add_all_needed_classes(*return_pointer);
       anything_new = true;
     }
@@ -206,14 +206,14 @@ static bool handle_virtual_methods_with_no_callees(
   std::unordered_set<irep_idt> &instantiated_classes,
   const std::unordered_set<exprt, irep_hash> &virtual_function_calls,
   symbol_tablet &symbol_table,
-  const class_hierarchyt &class_hierarchy)
+  const class_hierarchyt &class_hierarchy,
+  const select_pointer_typet &pointer_selector)
 {
-  smart_select_pointer_typet select_pointer_type{true};
   ci_lazy_methods_neededt lazy_methods_loader(
     methods_to_convert_later,
     instantiated_classes,
     symbol_table,
-    select_pointer_type);
+    pointer_selector);
 
   bool any_new_classes = false;
   for(const exprt &virtual_function_call : virtual_function_calls)
@@ -301,6 +301,7 @@ void ci_lazy_methods_v11(
   lazy_goto_modelt &goto_model,
   const std::vector<load_extra_methodst> &lazy_methods_extra_entry_points,
   const class_hierarchyt &class_hierarchy,
+  const select_pointer_typet &pointer_selector,
   message_handlert &message_handler)
 {
   messaget log(message_handler);
@@ -336,7 +337,6 @@ void ci_lazy_methods_v11(
     // (i.e. we can see all object instantiation) then we should delete this
     // code.
     std::unordered_set<irep_idt> initial_callable_methods;
-    smart_select_pointer_typet pointer_selector{true};
     ci_lazy_methods_neededt initial_lazy_methods(
       initial_callable_methods,
       instantiated_classes,
@@ -378,7 +378,8 @@ void ci_lazy_methods_v11(
             methods_to_convert_later,
             instantiated_classes,
             virtual_function_calls,
-            class_hierarchy);
+            class_hierarchy,
+            pointer_selector);
         }
       }
 
@@ -404,7 +405,8 @@ void ci_lazy_methods_v11(
       instantiated_classes,
       virtual_function_calls,
       symbol_table,
-      class_hierarchy);
+      class_hierarchy,
+      pointer_selector);
 
     if(!initialize_converted && !any_new_classes)
     {
@@ -416,7 +418,8 @@ void ci_lazy_methods_v11(
             methods_to_convert_later,
             instantiated_classes,
             virtual_function_calls,
-            class_hierarchy);
+            class_hierarchy,
+            pointer_selector);
     }
   }
 
