@@ -13,7 +13,6 @@ Author: Diffblue Ltd.
 
 #include <linking/static_lifetime_init.h>
 #include <test-gen-util/algorithm/insert_all.h>
-#include <test-gen-util/as.h>
 #include <util/expr_iterator.h>
 #include <util/graph.h>
 
@@ -147,9 +146,9 @@ static optionalt<irep_idt> get_initialized_global(
     if(lhs.id() == ID_symbol)
       initialized_id = to_symbol_expr(lhs).get_identifier();
   }
-  else if(const auto call = as<code_function_callt>(code))
+  else if(const auto call = expr_try_dynamic_cast<code_function_callt>(code))
   {
-    if(const auto function = as<symbol_exprt>(call->function()))
+    if(const auto function = expr_try_dynamic_cast<symbol_exprt>(call->function()))
     {
       // Assume init function initializes its first argument.
       // Any function call within __CPROVER_initialize is an initializer which

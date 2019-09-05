@@ -7,7 +7,6 @@
 #include <java_bytecode/remove_exceptions.h>
 #include <linking/static_lifetime_init.h>
 #include <test-gen-util/algorithm/insert_all.h>
-#include <test-gen-util/as.h>
 #include <test-gen-util/functors/pair.h>
 #include <test-java-gen/smart_select_pointer_type.h>
 #include <util/range.h>
@@ -60,10 +59,12 @@ bool gather_needed_methods_and_types(
 
   method_body.visit_pre([&](const exprt &subexpr)
   {
-    if(const auto function_call = as<code_function_callt>(subexpr))
+    if(
+      const auto function_call =
+        expr_try_dynamic_cast<code_function_callt>(subexpr))
     {
       const auto &callee = function_call->function();
-      if(const auto symbol = as<symbol_exprt>(callee))
+      if(const auto symbol = expr_try_dynamic_cast<symbol_exprt>(callee))
       {
         anything_changed |=
           methods_to_convert_later.insert(symbol->get_identifier()).second;
@@ -73,13 +74,17 @@ bool gather_needed_methods_and_types(
         anything_changed |= virtual_function_calls.insert(callee).second;
       }
     }
-    else if(const auto side_effect = as<side_effect_exprt>(subexpr))
+    else if(
+      const auto side_effect =
+        expr_try_dynamic_cast<side_effect_exprt>(subexpr))
     {
       if(side_effect->get_statement() == ID_java_new ||
         side_effect->get_statement() == ID_allocate)
       {
-        if(const auto instantiated_type = as<struct_tag_typet>(
-             to_pointer_type(side_effect->type()).subtype()))
+        if(
+          const auto instantiated_type =
+            type_try_dynamic_cast<struct_tag_typet>(
+              to_pointer_type(side_effect->type()).subtype()))
         {
           anything_changed |= add_instantiated_type(
             instantiated_type->get_identifier(), methods_to_convert_later, instantiated_classes, symbol_table, class_hierarchy);
@@ -112,7 +117,7 @@ bool convert_and_analyze_method(
   (void)goto_model.get_goto_function(method_name);
 
   const auto &method_symbol = symbol_table.lookup_ref(method_name);
-  const auto method_code = as<codet>(method_symbol.value);
+  const auto method_code = expr_try_dynamic_cast<codet>(method_symbol.value);
 
   bool anything_new = false;
   if(method_code)
@@ -126,7 +131,7 @@ bool convert_and_analyze_method(
     // Once we're producing stubs as we go, we won't need this special case, but
     // for now we make some assumptions about what the eventually-produced stub
     // might do:
-    if(const auto return_pointer = as<pointer_typet>(
+    if(const auto return_pointer = type_try_dynamic_cast<pointer_typet>(
          to_code_type(method_symbol.type).return_type()))
     {
       smart_select_pointer_typet select_pointer_type{true};
@@ -420,7 +425,7 @@ void ci_lazy_methods_v11(
     make_range(symbol_table.symbols)
       .filter([&](decltype(*symbol_table.symbols.cbegin()) symbol_pair) {
         return !symbol_pair.second.is_static_lifetime &&
-               as<code_typet>(symbol_pair.second.type) &&
+               type_try_dynamic_cast<code_typet>(symbol_pair.second.type) &&
                methods_already_populated.count(symbol_pair.first) == 0;
       })
       .map(first);
