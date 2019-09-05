@@ -12,7 +12,6 @@ Author: Diffblue Ltd.
 #include "remove_dead_globals.h"
 
 #include <linking/static_lifetime_init.h>
-#include <test-gen-util/algorithm/insert_all.h>
 #include <util/expr_iterator.h>
 #include <util/graph.h>
 
@@ -260,7 +259,8 @@ void remove_dead_globals(
     // Propagate dependencies:
     const std::unordered_set<irep_idt> transitive_references =
       dependency_graph.get_dependents(referenced_global_symbols);
-    insert_all(referenced_global_symbols, transitive_references);
+    referenced_global_symbols.insert(
+      transitive_references.begin(), transitive_references.end());
   }
 
   messaget log(message_handler);

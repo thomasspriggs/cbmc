@@ -7,7 +7,6 @@
 #include <java_bytecode/remove_dead_globals.h>
 #include <java_bytecode/remove_exceptions.h>
 #include <linking/static_lifetime_init.h>
-#include <test-gen-util/algorithm/insert_all.h>
 #include <test-gen-util/functors/pair.h>
 #include <test-java-gen/smart_select_pointer_type.h>
 #include <util/range.h>
@@ -314,9 +313,9 @@ void ci_lazy_methods_v11(
   // same way as the main function.
   for(const auto &extra_function_generator : lazy_methods_extra_entry_points)
   {
-    std::vector<irep_idt> extra_methods =
+    const std::vector<irep_idt> extra_methods =
       extra_function_generator(goto_model.symbol_table);
-    insert_all(methods_to_convert_later, extra_methods);
+    methods_to_convert_later.insert(extra_methods.begin(), extra_methods.end());
   }
 
   std::unordered_set<irep_idt> instantiated_classes = {
