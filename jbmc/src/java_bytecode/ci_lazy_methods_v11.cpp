@@ -7,7 +7,6 @@
 #include <java_bytecode/remove_dead_globals.h>
 #include <java_bytecode/remove_exceptions.h>
 #include <linking/static_lifetime_init.h>
-#include <test-gen-util/functors/pair.h>
 #include <test-java-gen/smart_select_pointer_type.h>
 #include <util/range.h>
 
@@ -428,7 +427,9 @@ void ci_lazy_methods_v11(
                type_try_dynamic_cast<code_typet>(symbol_pair.second.type) &&
                methods_already_populated.count(symbol_pair.first) == 0;
       })
-      .map(first);
+      .map([&](decltype(*symbol_table.symbols.cbegin()) symbol_pair) {
+        return symbol_pair.first;
+      });
   for(const auto &not_needed : functions_not_needed)
     symbol_table.remove(not_needed);
 
