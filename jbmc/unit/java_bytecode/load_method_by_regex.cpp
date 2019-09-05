@@ -6,9 +6,12 @@ Author: Diffblue Limited
 
 \*******************************************************************/
 
+#include <java_bytecode/java_types.h>
 #include <java_bytecode/load_method_by_regex.h>
 #include <testing-utils/require_vectors_equal_unordered.h>
 #include <testing-utils/use_catch.h>
+#include <util/symbol.h>
+#include <util/symbol_table.h>
 
 SCENARIO(
   "load_method_by_regex::does_pattern_miss_descriptor",

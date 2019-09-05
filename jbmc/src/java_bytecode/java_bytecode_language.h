@@ -11,8 +11,8 @@ Author: Daniel Kroening, kroening@kroening.com
 #define CPROVER_JAVA_BYTECODE_JAVA_BYTECODE_LANGUAGE_H
 
 #include "assignments_from_json.h"
-#include "ci_lazy_methods.h"
 #include "ci_lazy_methods_needed.h"
+#include "ci_lazy_methods_v11.h"
 #include "java_class_loader.h"
 #include "java_object_factory_parameters.h"
 #include "java_static_initializers.h"
@@ -111,7 +111,6 @@ class symbolt;
 enum lazy_methods_modet
 {
   LAZY_METHODS_MODE_EAGER,
-  LAZY_METHODS_MODE_CONTEXT_INSENSITIVE,
   LAZY_METHODS_MODE_EXTERNAL_DRIVER
 };
 
@@ -209,7 +208,6 @@ protected:
     symbol_table_baset &symbol_table,
     optionalt<ci_lazy_methods_neededt> needed_lazy_methods);
 
-  bool do_ci_lazy_method_conversion(symbol_tablet &);
   const select_pointer_typet &get_pointer_type_selector() const;
 
   bool language_options_initialized;

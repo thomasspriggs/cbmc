@@ -28,7 +28,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <goto-programs/class_hierarchy.h>
 
-#include "ci_lazy_methods.h"
 #include "create_array_with_type_intrinsic.h"
 #include "java_bytecode_concurrency_instrumentation.h"
 #include "java_bytecode_convert_class.h"
@@ -131,15 +130,10 @@ void java_bytecode_languaget::set_language_options(const optionst &options)
   max_user_array_length =
     options.get_unsigned_int_option("java-max-vla-length");
 
-  if(options.get_bool_option("symex-driven-lazy-loading") ||
-     options.get_bool_option("lazy-methods-test-v11"))
-  {
-    lazy_methods_mode=LAZY_METHODS_MODE_EXTERNAL_DRIVER;
-  }
-  else if(options.get_bool_option("lazy-methods"))
-    lazy_methods_mode=LAZY_METHODS_MODE_CONTEXT_INSENSITIVE;
-  else
-    lazy_methods_mode=LAZY_METHODS_MODE_EAGER;
+  lazy_methods_mode = options.get_bool_option("symex-driven-lazy-loading") ||
+                          options.get_bool_option("lazy-methods")
+                        ? LAZY_METHODS_MODE_EXTERNAL_DRIVER
+                        : LAZY_METHODS_MODE_EAGER;
 
   if(throw_runtime_exceptions)
   {
@@ -858,11 +852,6 @@ bool java_bytecode_languaget::typecheck(
   // that are reachable from this entry point.
   switch(lazy_methods_mode)
   {
-  case LAZY_METHODS_MODE_CONTEXT_INSENSITIVE:
-    // ci = context-insensitive
-    if(do_ci_lazy_method_conversion(symbol_table))
-      return true;
-    break;
   case LAZY_METHODS_MODE_EAGER:
   {
     symbol_table_buildert symbol_table_builder =
@@ -963,45 +952,6 @@ bool java_bytecode_languaget::generate_support_functions(
         get_pointer_type_selector(),
         get_message_handler());
     });
-}
-
-/// Uses a simple context-insensitive ('ci') analysis to determine which methods
-/// may be reachable from the main entry point. In brief, static methods are
-/// reachable if we find a callsite in another reachable site, while virtual
-/// methods are reachable if we find a virtual callsite targeting a compatible
-/// type *and* a constructor callsite indicating an object of that type may be
-/// instantiated (or evidence that an object of that type exists before the main
-/// function is entered, such as being passed as a parameter).
-/// \param symbol_table: global symbol table
-/// \return Elaborates lazily-converted methods that may be reachable starting
-///   from the main entry point (usually provided with the --function command-
-///   line option) (side-effect on the symbol_table). Returns false on success.
-bool java_bytecode_languaget::do_ci_lazy_method_conversion(
-  symbol_tablet &symbol_table)
-{
-  symbol_table_buildert symbol_table_builder =
-    symbol_table_buildert::wrap(symbol_table);
-
-  const method_convertert method_converter =
-    [this, &symbol_table_builder](
-      const irep_idt &function_id,
-      ci_lazy_methods_neededt lazy_methods_needed) {
-      return convert_single_method(
-        function_id, symbol_table_builder, std::move(lazy_methods_needed));
-    };
-
-  ci_lazy_methodst method_gather(
-    symbol_table,
-    main_class,
-    main_jar_classes,
-    extra_methods,
-    java_class_loader,
-    java_load_classes,
-    get_pointer_type_selector(),
-    get_message_handler(),
-    synthetic_methods);
-
-  return method_gather(symbol_table, method_bytecode, method_converter);
 }
 
 const select_pointer_typet &

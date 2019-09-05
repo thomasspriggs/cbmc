@@ -708,10 +708,34 @@ int jbmc_parse_optionst::get_goto_program(
   // particular function:
   add_failed_symbols(lazy_goto_model.symbol_table);
 
+  const bool lazy_methods = !cmdline.isset("no-lazy-methods");
+  // The precise wording of this error matches goto-symex's complaint when no
+  // __CPROVER_start exists (if we just go ahead and run it anyway it will
+  // trip an invariant when it tries to load it)
+  if(
+    lazy_methods &&
+    !lazy_goto_model.symbol_table.has_symbol(goto_functionst::entry_point()))
+  {
+    log.error() << "the program has no entry point" << messaget::eom;
+    return CPROVER_EXIT_INCORRECT_TASK;
+  }
+
   if(!options.get_bool_option("symex-driven-lazy-loading"))
   {
     log.status() << "Generating GOTO Program" << messaget::eom;
-    lazy_goto_model.load_all_functions();
+    if(lazy_methods)
+    {
+      ci_lazy_methods_v11(
+        lazy_goto_model,
+        {},
+        *class_hierarchy,
+        select_pointer_typet{},
+        ui_message_handler);
+    }
+    else
+    {
+      lazy_goto_model.load_all_functions();
+    }
 
     // show symbol table or list symbols
     if(show_loaded_symbols(lazy_goto_model))
@@ -739,15 +763,6 @@ int jbmc_parse_optionst::get_goto_program(
   }
   else
   {
-    // The precise wording of this error matches goto-symex's complaint when no
-    // __CPROVER_start exists (if we just go ahead and run it anyway it will
-    // trip an invariant when it tries to load it)
-    if(!lazy_goto_model.symbol_table.has_symbol(goto_functionst::entry_point()))
-    {
-      log.error() << "the program has no entry point" << messaget::eom;
-      return CPROVER_EXIT_INCORRECT_TASK;
-    }
-
     if(cmdline.isset("validate-goto-model"))
     {
       lazy_goto_model.validate();
