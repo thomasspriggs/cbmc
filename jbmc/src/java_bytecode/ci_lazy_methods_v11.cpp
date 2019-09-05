@@ -2,11 +2,9 @@
 #include "ci_lazy_methods_v11.h"
 
 #include <goto-programs/resolve_inherited_component.h>
-#include <java_bytecode/ci_lazy_methods_needed.h>
 #include <java_bytecode/java_static_initializers.h>
 #include <java_bytecode/remove_dead_globals.h>
 #include <java_bytecode/remove_exceptions.h>
-#include <java_bytecode/select_pointer_type.h>
 #include <linking/static_lifetime_init.h>
 #include <util/range.h>
 
