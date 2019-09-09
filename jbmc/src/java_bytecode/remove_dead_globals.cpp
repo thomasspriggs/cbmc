@@ -15,6 +15,11 @@ Author: Diffblue Ltd.
 #include <util/expr_iterator.h>
 #include <util/graph.h>
 
+#include <iostream>
+#define WATCHVAR(var)                                                          \
+  std::cerr << "DBG: " << __FILE__ << "(" << __LINE__ << ") " << #var          \
+            << " = [" << (var) << "]" << std::endl
+
 /// Run a function for every global symbol reference in the given expression
 /// \param expr: expression we'll search for global symbol references
 /// \param instruction: instruction that expr occurs within
@@ -33,6 +38,8 @@ static void for_each_global_symbol(
     if(it->id() == ID_symbol)
     {
       const irep_idt &id = to_symbol_expr(*it).get_identifier();
+      if(!symbol_table.has_symbol(id))
+        WATCHVAR(it->pretty());
       if(symbol_table.lookup_ref(id).is_static_lifetime)
         func(instruction, id);
     }
@@ -205,6 +212,7 @@ void remove_dead_globals(
 
   for(const auto &id_function : goto_model.get_goto_functions().function_map)
   {
+    WATCHVAR(id_function.first);
     if(id_function.first == INITIALIZE_FUNCTION)
       continue;
     for_each_global_symbol(

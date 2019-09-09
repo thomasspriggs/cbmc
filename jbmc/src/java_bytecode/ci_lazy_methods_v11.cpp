@@ -8,6 +8,21 @@
 #include <linking/static_lifetime_init.h>
 #include <util/range.h>
 
+#include <goto-programs/show_symbol_table.cpp>
+#define SHOW_SYMBOL(var)                                                 \
+  {                                                                            \
+    std::stringstream debug_buffer;                                            \
+    (var).show(debug_buffer);                                                  \
+    std::cerr << "DBG: " << __FILE__ << "(" << __LINE__ << ") " << #var        \
+              << " =" << debug_buffer.str() << std::endl;                      \
+  }
+
+
+#include <iostream>
+#define WATCHVAR(var)                                                          \
+  std::cerr << "DBG: " << __FILE__ << "(" << __LINE__ << ") " << #var          \
+            << " = [" << (var) << "]" << std::endl
+
 bool add_instantiated_type(
   const irep_idt &instantiated_type,
   std::unordered_set<irep_idt> &methods_to_convert_later,
@@ -119,6 +134,8 @@ bool convert_and_analyze_method(
   const class_hierarchyt &class_hierarchy,
   const select_pointer_typet &pointer_selector)
 {
+  WATCHVAR(method_name);
+
   const auto &symbol_table = goto_model.get_symbol_table();
 
   // Called to cause conversion; we don't actually need the GOTO version of this
@@ -423,6 +440,14 @@ void ci_lazy_methods_v11(
       any_new_classes = true;
       methods_already_populated.erase(INITIALIZE_FUNCTION);
       methods_to_convert_later.insert(INITIALIZE_FUNCTION);
+      //convert_and_analyze_method(
+      //      goto_model,
+      //      INITIALIZE_FUNCTION,
+      //      methods_to_convert_later,
+      //      instantiated_classes,
+      //      virtual_function_calls,
+      //      class_hierarchy,
+      //      pointer_selector);
     }
   }
 
@@ -437,10 +462,15 @@ void ci_lazy_methods_v11(
         return symbol_pair.first;
       });
   for(const auto &not_needed : functions_not_needed)
+  {
+    WATCHVAR(not_needed);
     symbol_table.remove(not_needed);
+  }
 
   log.debug() << "CI lazy methods: removed " << functions_not_needed.size()
               << " unreachable methods" << messaget::eom;
+
+//  SHOW_SYMBOL(symbol_table.lookup_ref(INITIALIZE_FUNCTION));
 
   remove_dead_globals(
     goto_model,
