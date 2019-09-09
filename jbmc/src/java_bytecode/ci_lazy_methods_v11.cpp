@@ -18,6 +18,17 @@ bool add_instantiated_type(
   if(!instantiated_classes.insert(instantiated_type).second)
     return false;
 
+  for(const irep_idt &parent :
+      class_hierarchy.get_parents_trans(instantiated_type))
+  {
+    add_instantiated_type(
+      parent,
+      methods_to_convert_later,
+      instantiated_classes,
+      symbol_table,
+      class_hierarchy);
+  }
+
   const std::string &class_name_string = id2string(instantiated_type);
   const irep_idt cprover_validate(
     class_name_string + ".cproverNondetInitialize:()V");
