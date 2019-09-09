@@ -410,14 +410,8 @@ void ci_lazy_methods_v11(
     {
       initialize_converted = true;
       any_new_classes = true;
-      convert_and_analyze_method(
-            goto_model,
-            INITIALIZE_FUNCTION,
-            methods_to_convert_later,
-            instantiated_classes,
-            virtual_function_calls,
-            class_hierarchy,
-            pointer_selector);
+      methods_already_populated.erase(INITIALIZE_FUNCTION);
+      methods_to_convert_later.insert(INITIALIZE_FUNCTION);
     }
   }
 
