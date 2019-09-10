@@ -197,7 +197,11 @@ void get_virtual_method_targets(
   for(const irep_idt &class_name : self_and_child_classes)
   {
     const auto method_name = get_virtual_method_target(
-      instantiated_classes, call_basename, class_name, symbol_table, class_hierarchy);
+      instantiated_classes,
+      call_basename,
+      class_name,
+      symbol_table,
+      class_hierarchy);
     if(method_name)
       callable_methods.insert(*method_name);
   }
@@ -381,6 +385,9 @@ void ci_lazy_methods_v11(
           if(!methods_already_populated.insert(mname).second)
             continue;
 
+          log.debug() << "CI lazy methods: elaborate " << mname
+                      << messaget::eom;
+
           any_new_methods |= convert_and_analyze_method(
             goto_model,
             mname,
@@ -425,6 +432,12 @@ void ci_lazy_methods_v11(
       methods_to_convert_later.insert(INITIALIZE_FUNCTION);
     }
   }
+
+  //for(const auto &method_name : methods_already_populated)
+  //{
+  //  log.debug() << "CI lazy methods: elaborate " << method_name
+  //              << messaget::eom;
+  //}
 
   const std::vector<irep_idt> functions_not_needed =
     make_range(symbol_table.symbols)
