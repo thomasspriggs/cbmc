@@ -205,6 +205,9 @@ void remove_dead_globals(
 
   for(const auto &id_function : goto_model.get_goto_functions().function_map)
   {
+    messaget{message_handler}.debug()
+      << "Remove dead globals: Gathering references to globals in "
+      << id_function.first << messaget::eom;
     if(id_function.first == INITIALIZE_FUNCTION)
       continue;
     for_each_global_symbol(
