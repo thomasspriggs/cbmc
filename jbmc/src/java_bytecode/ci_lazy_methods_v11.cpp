@@ -310,6 +310,32 @@ static void initialize_instantiated_classes(
   }
 }
 
+/// A subset of the function calls in a virtual function call table may be
+/// unreachable. These are the calls to functions which are declared by classes
+/// which are never instantiated as part of our analysis. Given that these
+/// function calls are unreachable, they can be replaced with `assume(false)`.
+static void remove_dead_function_calls(
+  lazy_goto_modelt &goto_model,
+  const std::unordered_set<irep_idt> &functions_not_needed)
+{
+  for(auto &id_function : goto_model.get_goto_functions_writable().function_map)
+  {
+    for(goto_programt::instructiont &instruction : id_function.second.body.instructions)
+    {
+      if(!instruction.is_function_call())
+        continue;
+      const auto &target = expr_try_dynamic_cast<symbol_exprt>(
+        instruction.get_function_call().function());
+      if(!target)
+        continue;
+      if(functions_not_needed.count(target->get_identifier()) == 0)
+        continue;
+      instruction = goto_programt::make_assumption(
+        false_exprt{}, instruction.source_location);
+    }
+  }
+}
+
 void ci_lazy_methods_v11(
   lazy_goto_modelt &goto_model,
   const std::vector<load_extra_methodst> &lazy_methods_extra_entry_points,
@@ -439,7 +465,7 @@ void ci_lazy_methods_v11(
   //              << messaget::eom;
   //}
 
-  const std::vector<irep_idt> functions_not_needed =
+  const std::unordered_set<irep_idt> functions_not_needed =
     make_range(symbol_table.symbols)
       .filter([&](decltype(*symbol_table.symbols.cbegin()) symbol_pair) {
         return !symbol_pair.second.is_static_lifetime &&
@@ -454,6 +480,8 @@ void ci_lazy_methods_v11(
 
   log.debug() << "CI lazy methods: removed " << functions_not_needed.size()
               << " unreachable methods" << messaget::eom;
+
+  remove_dead_function_calls(goto_model, functions_not_needed);
 
   remove_dead_globals(
     goto_model,

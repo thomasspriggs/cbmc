@@ -243,6 +243,11 @@ public:
     return goto_functions.at(id);
   }
 
+  goto_functionst &get_goto_functions_writable()
+  {
+    return goto_model->goto_functions;
+  }
+
   goto_functionst::goto_functiont &get_goto_function_writable(
     const irep_idt &id)
   {
