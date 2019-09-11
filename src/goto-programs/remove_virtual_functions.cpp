@@ -488,6 +488,7 @@ goto_programt::targett remove_virtual_functionst::remove_virtual_function(
   INVARIANT(
     !code.arguments().empty(),
     "virtual function calls must have at least a this-argument");
+  WATCHVAR(function.get(ID_C_class));
   WATCHVAR(function.get(ID_component_name));
 
   get_virtual_calleest get_callees(symbol_table, class_hierarchy);
@@ -531,12 +532,16 @@ void get_virtual_calleest::get_child_functions_rec(
   dispatch_table_entries_mapt &entry_map,
   const function_call_resolvert &resolve_function_call) const
 {
+  WATCHVAR(this_id);
+  WATCHVAR(class_hierarchy.class_map.find(this_id)==class_hierarchy.class_map.end());
   auto findit=class_hierarchy.class_map.find(this_id);
   if(findit==class_hierarchy.class_map.end())
     return;
 
   for(const auto &child : findit->second.children)
   {
+    WATCHVAR(child);
+
     // Skip if we have already visited this and we found a function call that
     // did not resolve to non java.lang.Object.
     auto it = entry_map.find(child);
@@ -551,6 +556,7 @@ void get_virtual_calleest::get_child_functions_rec(
     }
     exprt method = get_method(child, component_name);
     dispatch_table_entryt function(child);
+    WATCHVAR(method.is_not_nil());
     if(method.is_not_nil())
     {
       function.symbol_expr=to_symbol_expr(method);

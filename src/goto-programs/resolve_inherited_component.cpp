@@ -24,6 +24,11 @@ resolve_inherited_componentt::resolve_inherited_componentt(
   PRECONDITION(!class_hierarchy.class_map.empty());
 }
 
+#include <iostream>
+#define WATCHVAR(var)                                                          \
+  std::cerr << "DBG: " << __FILE__ << "(" << __LINE__ << ") " << #var          \
+            << " = [" << (var) << "]" << std::endl
+
 /// Given a class and a component, identify the concrete field or method it is
 /// resolved to. For example, a reference Child.abc refers to Child's method or
 /// field if it exists, or else Parent.abc, and so on regarding Parent's
@@ -42,6 +47,8 @@ resolve_inherited_componentt::operator()(
 {
   PRECONDITION(!class_id.empty());
   PRECONDITION(!component_name.empty());
+  WATCHVAR(class_id);
+  WATCHVAR(component_name);
 
   std::vector<irep_idt> classes_to_visit;
   classes_to_visit.push_back(class_id);
@@ -49,10 +56,13 @@ resolve_inherited_componentt::operator()(
   {
     irep_idt current_class = classes_to_visit.back();
     classes_to_visit.pop_back();
+    WATCHVAR(current_class);
 
     const irep_idt &full_component_identifier=
       build_full_component_identifier(current_class, component_name);
+    WATCHVAR(full_component_identifier);
 
+    WATCHVAR(symbol_table.has_symbol(full_component_identifier));
     if(symbol_table.has_symbol(full_component_identifier))
     {
       return inherited_componentt(current_class, component_name);
