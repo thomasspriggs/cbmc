@@ -562,10 +562,6 @@ void get_virtual_calleest::get_child_functions_rec(
       function.symbol_expr=to_symbol_expr(method);
       function.symbol_expr->set(ID_C_class, child);
     }
-    else
-    {
-      function.symbol_expr=last_method_defn;
-    }
     if(!function.symbol_expr.has_value())
     {
       const auto resolved_call = resolve_function_call(child, component_name);
