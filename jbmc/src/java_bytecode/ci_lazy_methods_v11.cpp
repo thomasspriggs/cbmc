@@ -142,11 +142,6 @@ bool convert_and_analyze_method(
   return anything_new;
 }
 
-#include <iostream>
-#define WATCHVAR(var)                                                          \
-  std::cerr << "DBG: " << __FILE__ << "(" << __LINE__ << ") " << #var          \
-            << " = [" << (var) << "]" << std::endl
-
 optionalt<irep_idt> get_virtual_method_target(
   const std::unordered_set<irep_idt> &instantiated_classes,
   const irep_idt &call_basename,
@@ -154,10 +149,6 @@ optionalt<irep_idt> get_virtual_method_target(
   const symbol_tablet &symbol_table,
   const class_hierarchyt &class_hierarchy)
 {
-  WATCHVAR(call_basename);
-  WATCHVAR(classname);
-  WATCHVAR(instantiated_classes.count(classname));
-
   // Program-wide, is this class ever instantiated?
   if(!instantiated_classes.count(classname))
     return {};
