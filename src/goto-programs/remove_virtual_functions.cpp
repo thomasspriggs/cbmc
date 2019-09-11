@@ -459,6 +459,11 @@ static goto_programt::targett replace_virtual_function_with_dispatch_table(
   return next_target;
 }
 
+#include <iostream>
+#define WATCHVAR(var)                                                          \
+  std::cerr << "DBG: " << __FILE__ << "(" << __LINE__ << ") " << #var          \
+            << " = [" << (var) << "]" << std::endl
+
 /// Replace specified virtual function call with a static call to its
 /// most derived implementation
 /// \param function_id: The identifier of the function we are currently
@@ -473,6 +478,7 @@ goto_programt::targett remove_virtual_functionst::remove_virtual_function(
   goto_programt &goto_program,
   goto_programt::targett target)
 {
+  WATCHVAR(function_id);
   const code_function_callt &code = target->get_function_call();
 
   const exprt &function = code.function();
@@ -482,10 +488,17 @@ goto_programt::targett remove_virtual_functionst::remove_virtual_function(
   INVARIANT(
     !code.arguments().empty(),
     "virtual function calls must have at least a this-argument");
+  WATCHVAR(function.get(ID_component_name));
 
   get_virtual_calleest get_callees(symbol_table, class_hierarchy);
   dispatch_table_entriest functions;
   get_callees.get_functions(function, functions);
+  for(const auto &entry : functions)
+  {
+    WATCHVAR(entry.class_id);
+    if(entry.symbol_expr.has_value())
+    WATCHVAR(entry.symbol_expr->get_identifier());
+  }
 
   return replace_virtual_function_with_dispatch_table(
     symbol_table,

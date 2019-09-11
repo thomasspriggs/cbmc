@@ -305,7 +305,8 @@ static void initialize_instantiated_classes(
 /// function calls are unreachable, they can be replaced with `assume(false)`.
 static void remove_dead_function_calls(
   lazy_goto_modelt &goto_model,
-  const std::unordered_set<irep_idt> &functions_not_needed)
+  const std::unordered_set<irep_idt> &functions_not_needed,
+  message_handlert &message_handler)
 {
   for(auto &id_function : goto_model.get_goto_functions_writable().function_map)
   {
@@ -319,6 +320,10 @@ static void remove_dead_function_calls(
         continue;
       if(functions_not_needed.count(target->get_identifier()) == 0)
         continue;
+      messaget{message_handler}.debug()
+        << "Remove dead function calls: Removing call to '"
+        << target->get_identifier() << "' in '" << id_function.first << "'."
+        << messaget::eom;
       instruction = goto_programt::make_assumption(
         false_exprt{}, instruction.source_location);
     }
@@ -470,10 +475,11 @@ void ci_lazy_methods_v11(
   log.debug() << "CI lazy methods: removed " << functions_not_needed.size()
               << " unreachable methods" << messaget::eom;
 
-  remove_dead_function_calls(goto_model, functions_not_needed);
+  //remove_dead_function_calls(goto_model, functions_not_needed, message_handler);
+  (void)remove_dead_function_calls;
 
-  remove_dead_globals(
-    goto_model,
-    message_handler,
-    {INFLIGHT_EXCEPTION_VARIABLE_NAME, CPROVER_PREFIX "rounding_mode"});
+  //remove_dead_globals(
+  //  goto_model,
+  //  message_handler,
+  //  {INFLIGHT_EXCEPTION_VARIABLE_NAME, CPROVER_PREFIX "rounding_mode"});
 }

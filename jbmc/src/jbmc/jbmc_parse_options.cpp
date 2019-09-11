@@ -733,6 +733,12 @@ int jbmc_parse_optionst::get_goto_program(
         *class_hierarchy,
         select_pointer_typet{},
         ui_message_handler);
+
+      namespacet ns{lazy_goto_model.symbol_table};
+      show_goto_functions(
+        ns,
+        ui_message_handler,
+        lazy_goto_model.get_goto_functions(), false);
     }
     else
     {
