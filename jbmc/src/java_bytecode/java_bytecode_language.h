@@ -249,8 +249,6 @@ private:
   // List of classes to never load
   std::unordered_set<std::string> no_load_classes;
 
-  std::vector<load_extra_methodst> extra_methods;
-
   /// Map used in all calls to functions that deterministically create objects
   /// (currently only \ref assign_from_json).
   /// It tracks objects that should be reference-equal to each other by mapping

@@ -68,6 +68,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <java_bytecode/java_multi_path_symex_only_checker.h>
 #include <java_bytecode/java_single_path_symex_checker.h>
 #include <java_bytecode/java_single_path_symex_only_checker.h>
+#include <java_bytecode/load_method_by_regex.h>
 #include <java_bytecode/remove_exceptions.h>
 #include <java_bytecode/remove_instanceof.h>
 #include <java_bytecode/remove_java_new.h>
@@ -727,7 +728,8 @@ int jbmc_parse_optionst::get_goto_program(
     {
       ci_lazy_methods_v11(
         lazy_goto_model,
-        {},
+        build_load_method_by_regexes(
+          cmdline.get_values("lazy-methods-extra-entry-point")),
         *class_hierarchy,
         select_pointer_typet{},
         ui_message_handler);

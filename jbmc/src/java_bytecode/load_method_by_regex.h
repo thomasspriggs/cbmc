@@ -22,6 +22,9 @@ class symbol_tablet;
 std::function<std::vector<irep_idt>(const symbol_tablet &symbol_table)>
 build_load_method_by_regex(const std::string &pattern);
 
+std::vector<std::function<std::vector<irep_idt>(const symbol_tablet &symbol_table)>>
+build_load_method_by_regexes(const std::list<std::string> &patterns);
+
 bool does_pattern_miss_descriptor(const std::string &pattern);
 
 #endif // CPROVER_JAVA_BYTECODE_LOAD_METHOD_BY_REGEX_H

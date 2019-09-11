@@ -85,12 +85,6 @@ void parse_java_language_options(const cmdlinet &cmd, optionst &options)
     options.set_option(
       "java-no-load-class", cmd.get_values("java-no-load-class"));
   }
-  if(cmd.isset("lazy-methods-extra-entry-point"))
-  {
-    options.set_option(
-      "lazy-methods-extra-entry-point",
-      cmd.get_values("lazy-methods-extra-entry-point"));
-  }
   if(cmd.isset("java-cp-include-files"))
   {
     options.set_option(
@@ -154,16 +148,6 @@ void java_bytecode_languaget::set_language_options(const optionst &options)
     const auto &no_load_values = options.get_list_option("java-no-load-class");
     no_load_classes = {no_load_values.begin(), no_load_values.end()};
   }
-  const std::list<std::string> &extra_entry_points =
-    options.get_list_option("lazy-methods-extra-entry-point");
-  std::transform(
-    extra_entry_points.begin(),
-    extra_entry_points.end(),
-    std::back_inserter(extra_methods),
-    build_load_method_by_regex);
-  const auto &new_points = build_extra_entry_points(options);
-  extra_methods.insert(
-    extra_methods.end(), new_points.begin(), new_points.end());
 
   java_cp_include_files = options.get_option("java-cp-include-files");
   if(!java_cp_include_files.empty())

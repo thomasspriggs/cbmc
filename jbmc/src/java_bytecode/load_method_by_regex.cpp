@@ -13,6 +13,7 @@ Author: Diffblue Ltd.
 
 #include <util/prefix.h>
 #include <util/symbol_table.h>
+#include <util/range.h>
 
 /// For a given user provided pattern, return a regex, having dealt with the
 /// cases where the user has not prefixed with java:: or suffixed with the
@@ -72,4 +73,10 @@ build_load_method_by_regex(const std::string &pattern)
     }
     return matched_methods;
   };
+}
+
+std::vector<std::function<std::vector<irep_idt>(const symbol_tablet &symbol_table)>>
+  build_load_method_by_regexes(const std::list<std::string>& patterns)
+{
+  return make_range(patterns).map(build_load_method_by_regex);
 }
