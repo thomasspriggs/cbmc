@@ -33,9 +33,8 @@ std::shared_ptr<java_signature_baset>
 java_signature_parse(const std::string &input)
 {
   // Running the generated parser against a string in memory rather than a file
-  // requires a pointer to mutable chars, terminated by two nulls. `std::string`
-  // does not expose a mutable interface like this. So `std::vector` is used, so
-  // that the lifespan of the raw pointer can be managed automatically.
+  // requires a pointer to mutable chars, terminated by two nulls. `std::vector`
+  // is used because `std::string` does not expose a mutable pointer.
   std::vector<char> buffer{input.begin(), input.end()};
   buffer.push_back('\0');
   buffer.push_back('\0');
@@ -47,6 +46,8 @@ java_signature_parse(const std::string &input)
   if(!buffer_state)
     return {};
   java_signature__switch_to_buffer(buffer_state.get());
+
+  // Call actual parser. Note return is via the global `java_signature_parsed`.
   java_signature_parsed = {};
   if(java_signature_parse() != 0)
     return {};

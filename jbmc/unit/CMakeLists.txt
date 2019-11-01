@@ -29,6 +29,7 @@ target_link_libraries(java-unit
         goto-instrument-lib
         cbmc-lib
         json-symtab-language
+        java_signature
 )
 
 add_test(
