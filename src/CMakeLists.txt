@@ -49,7 +49,7 @@ macro(generic_flex name)
         scanner
         "${CMAKE_CURRENT_SOURCE_DIR}/scanner.l"
         "${CMAKE_CURRENT_BINARY_DIR}/${name}_lex.yy.cpp"
-        COMPILE_FLAGS "-Pyy${name}"
+        COMPILE_FLAGS "-Pyy${name} --header-file=${CMAKE_CURRENT_BINARY_DIR}/${name}_lex.yy.h"
     )
 endmacro(generic_flex)
 

@@ -1,5 +1,6 @@
 # include here the targets defined in library/
 add_subdirectory(library)
+add_subdirectory(signatures)
 
 # target 'java_bytecode' depends on all .cpp and .h files
 file(GLOB sources "*.cpp")
@@ -12,4 +13,4 @@ generic_includes(java_bytecode)
 
 # if you link java_bytecode.a in, then you also need to link other .a libraries
 # in
-target_link_libraries(java_bytecode util goto-programs miniz json ansi-c)
+target_link_libraries(java_bytecode java_signature util goto-programs miniz json ansi-c )
