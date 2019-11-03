@@ -27,17 +27,19 @@ TopLevel
   ;
 
 FieldTypeSignature
-  : /*ClassTypeSignature
-  | */ ArrayTypeSignature
+  : ClassTypeSignature
+  | ArrayTypeSignature
   | TypeVariableSignature
   ;
 
-/*ClassTypeSignature
-  : 'L' SimpleClassTypeSignature {ClassTypeSignatureSuffix} ';'*/
+ClassTypeSignature
+//  : 'L' SimpleClassTypeSignature {ClassTypeSignatureSuffix} ';'
+  : 'L' SimpleClassTypeSignature ';'
+  ;
 
-//SimpleClassTypeSignature
-//  : Identifier
-//  ;
+SimpleClassTypeSignature
+  : Identifier TypeArgumentsOptional
+  ;
 
 TypeVariableSignature
   : 'T' Identifier ';'
@@ -51,6 +53,58 @@ Identifier
   {
     $$ = std::make_shared<java_signature_identifiert>(java_signature_text);
   }
+  ;
+
+TypeArgumentsOptional
+  : '<' TypeArguments '>' { $$ = $2; }
+  | %empty { $$ = {}; }
+  ;
+
+TypeArguments
+  : TypeArgument
+  {
+    $$ = std::make_shared<java_signature_type_argumentst>
+    (
+      std::forward_list<java_signature_type_argumentt>
+      {
+        std::move(checked_cast<java_signature_type_argumentt>(*$1))
+      }
+    );
+  }
+  | TypeArgument TypeArguments
+  {
+    auto arguments = checked_cast<java_signature_type_argumentst>($2);
+    arguments->collection.push_front
+    (
+      std::move(checked_cast<java_signature_type_argumentt>(*$1))
+    );
+    $$ = std::move(arguments);
+  }
+  ;
+
+TypeArgument
+  : WildcardIndicatorOptional FieldTypeSignature
+  {
+    $$ = std::make_shared<java_signature_type_argumentt>
+    (
+      std::move($1),
+      std::move($2)
+    );
+  }
+  | '*'
+  {
+    $$ = std::make_shared<java_signature_type_argumentt>
+    (
+      std::make_shared<java_signature_wildcard_indicatort<'*'>>(),
+      nullptr
+    );
+  }
+  ;
+
+WildcardIndicatorOptional
+  : '+' { $$ = std::make_shared<java_signature_wildcard_indicatort<'+'>>(); }
+  | '-' { $$ = std::make_shared<java_signature_wildcard_indicatort<'-'>>(); }
+  | %empty { $$ = {}; }
   ;
 
 ArrayTypeSignature
