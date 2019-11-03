@@ -33,6 +33,21 @@ TEST_CASE("Parse array of type variable java signature",
 }
 
 TEMPLATE_TEST_CASE(
+  "Parse primitive java signatures",
+  "[core][java_bytecode][java_signature_parser]",
+  (java_signature_primitivet<'B'>),
+  (java_signature_primitivet<'C'>),
+  (java_signature_primitivet<'D'>),
+  (java_signature_primitivet<'F'>),
+  (java_signature_primitivet<'I'>),
+  (java_signature_primitivet<'J'>),
+  (java_signature_primitivet<'S'>))
+{
+  REQUIRE(std::dynamic_pointer_cast<test_typet>(
+    java_signature_parse(std::string{test_typet::signature()})));
+}
+
+TEMPLATE_TEST_CASE(
   "Parse primitive array java signatures",
   "[core][java_bytecode][java_signature_parser]",
   (java_signature_primitivet<'B'>),
