@@ -23,10 +23,25 @@
 
 %%
 TopLevel
-  : FieldTypeSignature { result = $1; }
+  : JavaTypeSignature { result = $1; }
   ;
 
-FieldTypeSignature
+JavaTypeSignature
+  : ReferenceTypeSignature
+  | BaseType
+  ;
+
+BaseType
+  : 'B' { $$ = std::make_shared<java_signature_primitivet<'B'>>(); }
+  | 'C' { $$ = std::make_shared<java_signature_primitivet<'C'>>(); }
+  | 'D' { $$ = std::make_shared<java_signature_primitivet<'D'>>(); }
+  | 'F' { $$ = std::make_shared<java_signature_primitivet<'F'>>(); }
+  | 'I' { $$ = std::make_shared<java_signature_primitivet<'I'>>(); }
+  | 'J' { $$ = std::make_shared<java_signature_primitivet<'J'>>(); }
+  | 'S' { $$ = std::make_shared<java_signature_primitivet<'S'>>(); }
+  ;
+
+ReferenceTypeSignature
   : ClassTypeSignature
   | ArrayTypeSignature
   | TypeVariableSignature
@@ -99,7 +114,7 @@ TypeArguments
   ;
 
 TypeArgument
-  : WildcardIndicatorOptional FieldTypeSignature
+  : WildcardIndicatorOptional ReferenceTypeSignature
   {
     $$ = std::make_shared<java_signature_type_argumentt>
     (
@@ -131,16 +146,6 @@ ArrayTypeSignature
   ;
 
 TypeSignature
-  : FieldTypeSignature
+  : ReferenceTypeSignature
   | BaseType
-  ;
-
-BaseType
-  : 'B' { $$ = std::make_shared<java_signature_primitivet<'B'>>(); }
-  | 'C' { $$ = std::make_shared<java_signature_primitivet<'C'>>(); }
-  | 'D' { $$ = std::make_shared<java_signature_primitivet<'D'>>(); }
-  | 'F' { $$ = std::make_shared<java_signature_primitivet<'F'>>(); }
-  | 'I' { $$ = std::make_shared<java_signature_primitivet<'I'>>(); }
-  | 'J' { $$ = std::make_shared<java_signature_primitivet<'J'>>(); }
-  | 'S' { $$ = std::make_shared<java_signature_primitivet<'S'>>(); }
   ;
