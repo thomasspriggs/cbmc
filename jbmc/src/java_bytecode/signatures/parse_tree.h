@@ -30,7 +30,7 @@ resultt &checked_cast(java_signature_baset &input)
 template <char type_parameter>
 struct java_signature_primitivet final : public java_signature_baset
 {
-  constexpr char type() const {
+  static constexpr char signature() {
     return type_parameter;
   };
 

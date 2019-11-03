@@ -9,6 +9,8 @@ Author: Michael Tautschnig
 #ifndef CPROVER_TESTING_UTILS_USE_CATCH_H
 #define CPROVER_TESTING_UTILS_USE_CATCH_H
 
+#define TestType test_typet
+
 #ifdef _MSC_VER
 #include <util/pragma_push.def>
 #pragma warning(disable : 4061)
