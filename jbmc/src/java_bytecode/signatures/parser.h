@@ -14,7 +14,10 @@ Author: Diffblue Ltd.
 #include <string>
 #include <memory>
 
-int java_signature_error(const std::string &error);
+/// Called by generated parser on errors.
+int java_signature_error(
+  const std::shared_ptr<java_signature_baset> &,
+  const std::string &error);
 
 std::shared_ptr<java_signature_baset>
 java_signature_parse(const std::string &input);

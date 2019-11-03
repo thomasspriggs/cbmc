@@ -14,7 +14,9 @@ Author: Diffblue Ltd.
 
 #include <vector>
 
-int java_signature_error(const std::string &error)
+int java_signature_error(
+  const std::shared_ptr<java_signature_baset> &,
+  const std::string &error)
 {
   throw unsupported_java_class_signature_exceptiont{error};
 }
@@ -26,8 +28,6 @@ struct buffer_state_deletert final
     java_signature__delete_buffer(buffer);
   }
 };
-
-std::shared_ptr<java_signature_baset> java_signature_parsed;
 
 std::shared_ptr<java_signature_baset>
 java_signature_parse(const std::string &input)
@@ -47,12 +47,8 @@ java_signature_parse(const std::string &input)
     return {};
   java_signature__switch_to_buffer(buffer_state.get());
 
-  // Call actual parser. Note return is via the global `java_signature_parsed`.
-  java_signature_parsed = {};
-  if(java_signature_parse() != 0)
+  std::shared_ptr<java_signature_baset> result;
+  if(java_signature_parse(result) != 0)
     return {};
-  std::shared_ptr<java_signature_baset> result =
-    std::move(java_signature_parsed);
-  java_signature_parsed = {};
   return result;
 }

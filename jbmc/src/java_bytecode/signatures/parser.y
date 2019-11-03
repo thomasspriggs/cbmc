@@ -1,15 +1,21 @@
 
 %name-prefix "java_signature_"
 
+%code requires {
+#include "parse_tree.h"
+#include <memory>
+}
+
+%parse-param {std::shared_ptr<java_signature_baset> &result}
+%initial-action {result = {};}
+
 %{
 
 #include "parser.h"
-#include "parse_tree.h"
 #include "java_signature_lex.yy.h"
 #include <memory>
 
 #define YYSTYPE std::shared_ptr<java_signature_baset>
-extern YYSTYPE java_signature_parsed;
 
 %}
 
@@ -17,7 +23,7 @@ extern YYSTYPE java_signature_parsed;
 
 %%
 TopLevel
-  : FieldTypeSignature { java_signature_parsed = $1; }
+  : FieldTypeSignature { result = $1; }
   ;
 
 FieldTypeSignature
