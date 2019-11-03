@@ -17,11 +17,45 @@ extern YYSTYPE java_signature_parsed;
 
 %%
 TopLevel
-  : JavaTypeSignature { java_signature_parsed = $1; }
+  : FieldTypeSignature { java_signature_parsed = $1; }
   ;
 
-JavaTypeSignature
-  : ReferenceTypeSignature
+FieldTypeSignature
+  : /*ClassTypeSignature
+  | */ ArrayTypeSignature
+  | TypeVariableSignature
+  ;
+
+/*ClassTypeSignature
+  : 'L' SimpleClassTypeSignature {ClassTypeSignatureSuffix} ';'*/
+
+//SimpleClassTypeSignature
+//  : Identifier
+//  ;
+
+TypeVariableSignature
+  : 'T' Identifier ';'
+  {
+    $$ = std::make_shared<java_signature_type_variablet>(std::move($2));
+  }
+  ;
+
+Identifier
+  : TOK_JAVA_SIGNATURE_IDENTIFIER
+  {
+    $$ = std::make_shared<java_signature_identifiert>(java_signature_text);
+  }
+  ;
+
+ArrayTypeSignature
+  : '[' TypeSignature
+  {
+    $$ = std::make_shared<java_signature_array_typet>(std::move($2));
+  }
+  ;
+
+TypeSignature
+  : FieldTypeSignature
   | BaseType
   ;
 
@@ -33,31 +67,4 @@ BaseType
   | 'I' { $$ = std::make_shared<java_signature_primitivet<'I'>>(); }
   | 'J' { $$ = std::make_shared<java_signature_primitivet<'J'>>(); }
   | 'S' { $$ = std::make_shared<java_signature_primitivet<'S'>>(); }
-  ;
-
-ReferenceTypeSignature
-  : /* ClassTypeSignature
-  | */ TypeVariableSignature
-  //| ArrayTypeSignature
-  ;
-
-/*ClassTypeSignature
-  : 'L' SimpleClassTypeSignature {ClassTypeSignatureSuffix} ';'*/
-
-TypeVariableSignature
-  : 'T' SimpleClassTypeSignature ';'
-  {
-    $$ = std::make_shared<java_signature_type_variablet>(std::move($2));
-  }
-  ;
-
-SimpleClassTypeSignature
-  : Identifier
-  ;
-
-Identifier
-  : TOK_JAVA_SIGNATURE_IDENTIFIER
-  {
-    $$ = std::make_shared<java_signature_identifiert>(java_signature_text);
-  }
   ;

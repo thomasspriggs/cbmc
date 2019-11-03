@@ -70,4 +70,17 @@ struct java_signature_type_variablet final : public java_signature_identifiert
   ~java_signature_type_variablet() override = default;
 };
 
+struct java_signature_array_typet final : public java_signature_baset
+{
+  std::shared_ptr<java_signature_baset> element_type;
+
+  explicit java_signature_array_typet(
+    std::shared_ptr<java_signature_baset> element_type)
+    : element_type{std::move(element_type)}
+  {
+  }
+
+  ~java_signature_array_typet() override = default;
+};
+
 #endif // CPROVER_JAVA_BYTECODE_SIGNATURES_PARSE_TREE_H
