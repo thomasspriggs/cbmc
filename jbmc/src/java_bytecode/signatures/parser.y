@@ -34,11 +34,18 @@ FieldTypeSignature
 
 ClassTypeSignature
 //  : 'L' SimpleClassTypeSignature {ClassTypeSignatureSuffix} ';'
-  : 'L' SimpleClassTypeSignature ';'
+  : 'L' SimpleClassTypeSignature ';' { $$ = $2; }
   ;
 
 SimpleClassTypeSignature
   : Identifier TypeArgumentsOptional
+  {
+    $$ = std::make_shared<java_signature_simple_class_typet>
+    (
+      std::move($1),
+      checked_cast<java_signature_type_argumentst>(*$2)
+    );
+  }
   ;
 
 TypeVariableSignature
@@ -56,8 +63,17 @@ Identifier
   ;
 
 TypeArgumentsOptional
-  : '<' TypeArguments '>' { $$ = $2; }
-  | %empty { $$ = {}; }
+  : '<' TypeArguments '>'
+  {
+    $$ = $2;
+  }
+  | %empty
+  {
+    $$ = std::make_shared<java_signature_type_argumentst>
+    (
+      std::forward_list<java_signature_type_argumentt>{}
+    );
+  }
   ;
 
 TypeArguments

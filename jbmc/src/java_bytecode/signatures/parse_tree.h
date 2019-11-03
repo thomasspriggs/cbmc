@@ -14,6 +14,7 @@ Author: Diffblue Ltd.
 #include <util/invariant.h>
 #include <utility>
 #include <forward_list>
+#include <vector>
 
 struct java_signature_baset
 {
@@ -73,13 +74,6 @@ struct java_signature_identifiert : public java_signature_baset
   ~java_signature_identifiert() override = default;
 };
 
-struct java_signature_class_typet final : public java_signature_identifiert
-{
-  using java_signature_identifiert::java_signature_identifiert;
-
-  ~java_signature_class_typet() override = default;
-};
-
 struct java_signature_type_variablet final : public java_signature_identifiert
 {
   using java_signature_identifiert::java_signature_identifiert;
@@ -128,6 +122,22 @@ struct java_signature_type_argumentst final : public java_signature_baset
   }
 
   ~java_signature_type_argumentst() override = default;
+};
+
+struct java_signature_simple_class_typet final
+  : public java_signature_identifiert
+{
+  std::vector<java_signature_type_argumentt> arguments;
+
+  java_signature_simple_class_typet(
+    const std::shared_ptr<java_signature_baset> &identifier,
+    const java_signature_type_argumentst &arguments)
+    : java_signature_identifiert{identifier},
+      arguments(arguments.collection.begin(), arguments.collection.end())
+  {
+  }
+
+  ~java_signature_simple_class_typet() override = default;
 };
 
 struct java_signature_array_typet final : public java_signature_baset
