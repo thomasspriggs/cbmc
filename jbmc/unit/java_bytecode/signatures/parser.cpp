@@ -111,11 +111,26 @@ TEST_CASE("Parse generic class type java signature with one argument",
   REQUIRE(simple_class_type);
   REQUIRE(simple_class_type->identifier == "badger");
   REQUIRE(simple_class_type->arguments.size() == 1);
+  CHECK_FALSE(simple_class_type->arguments[0].wildcard);
   const auto type_argument =
     std::dynamic_pointer_cast<java_signature_simple_class_typet>(
       simple_class_type->arguments[0].field_type);
   REQUIRE(type_argument);
   REQUIRE(type_argument->identifier == "potato");
+}
+
+TEST_CASE("Parse generic class type java signature with one * argument",
+  "[core][java_bytecode][java_signature_parser]")
+{
+  const auto simple_class_type =
+    std::dynamic_pointer_cast<java_signature_simple_class_typet>(
+      java_signature_parse("Lbadger<*>;"));
+  REQUIRE(simple_class_type);
+  REQUIRE(simple_class_type->identifier == "badger");
+  REQUIRE(simple_class_type->arguments.size() == 1);
+  CHECK_FALSE(simple_class_type->arguments[0].field_type);
+  REQUIRE(std::dynamic_pointer_cast<java_signature_wildcard_indicatort<'*'>>(
+    simple_class_type->arguments[0].wildcard));
 }
 
 TEST_CASE("Parse generic class type java signature with two parameters",
@@ -127,11 +142,13 @@ TEST_CASE("Parse generic class type java signature with two parameters",
   REQUIRE(simple_class_type);
   REQUIRE(simple_class_type->identifier == "spam");
   REQUIRE(simple_class_type->arguments.size() == 2);
+  CHECK_FALSE(simple_class_type->arguments[0].wildcard);
   const auto first_type_variable =
     std::dynamic_pointer_cast<java_signature_type_variablet>(
       simple_class_type->arguments[0].field_type);
   REQUIRE(first_type_variable);
   REQUIRE(first_type_variable->identifier == "T");
+  CHECK_FALSE(simple_class_type->arguments[1].wildcard);
   const auto second_type_variable =
     std::dynamic_pointer_cast<java_signature_type_variablet>(
       simple_class_type->arguments[1].field_type);
@@ -158,4 +175,29 @@ TEST_CASE("Parse generic class type java signature with two arguments",
       simple_class_type->arguments[1].field_type);
   REQUIRE(second_type_argument);
   REQUIRE(second_type_argument->identifier == "ham");
+}
+
+TEST_CASE("Parse generic class type java signature with wildcard parameters",
+  "[core][java_bytecode][java_signature_parser]")
+{
+  const auto simple_class_type =
+    std::dynamic_pointer_cast<java_signature_simple_class_typet>(
+      java_signature_parse("Lspam<+TV;-TV;>;"));
+  REQUIRE(simple_class_type);
+  REQUIRE(simple_class_type->identifier == "spam");
+  REQUIRE(simple_class_type->arguments.size() == 2);
+  CHECK(std::dynamic_pointer_cast<java_signature_wildcard_indicatort<'+'>>(
+    simple_class_type->arguments[0].wildcard));
+  const auto first_type_variable =
+    std::dynamic_pointer_cast<java_signature_type_variablet>(
+      simple_class_type->arguments[0].field_type);
+  REQUIRE(first_type_variable);
+  REQUIRE(first_type_variable->identifier == "V");
+  CHECK(std::dynamic_pointer_cast<java_signature_wildcard_indicatort<'-'>>(
+    simple_class_type->arguments[1].wildcard));
+  const auto second_type_variable =
+    std::dynamic_pointer_cast<java_signature_type_variablet>(
+      simple_class_type->arguments[1].field_type);
+  REQUIRE(second_type_variable);
+  REQUIRE(second_type_variable->identifier == "V");
 }
