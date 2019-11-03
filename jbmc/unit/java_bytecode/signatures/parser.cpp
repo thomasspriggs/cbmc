@@ -21,17 +21,6 @@ TEST_CASE("Parse type variable java signature",
       ->identifier == "fish");
 }
 
-TEST_CASE("Parse array of type variable java signature",
-  "[core][java_bytecode][java_signature_parser]")
-{
-  REQUIRE(
-    std::dynamic_pointer_cast<java_signature_type_variablet>(
-      std::dynamic_pointer_cast<java_signature_array_typet>(
-        java_signature_parse("[Tfish;"))
-        ->element_type)
-      ->identifier == "fish");
-}
-
 TEMPLATE_TEST_CASE(
   "Parse primitive java signatures",
   "[core][java_bytecode][java_signature_parser]",
@@ -47,23 +36,6 @@ TEMPLATE_TEST_CASE(
     java_signature_parse(std::string{test_typet::signature()})));
 }
 
-TEMPLATE_TEST_CASE(
-  "Parse primitive array java signatures",
-  "[core][java_bytecode][java_signature_parser]",
-  (java_signature_primitivet<'B'>),
-  (java_signature_primitivet<'C'>),
-  (java_signature_primitivet<'D'>),
-  (java_signature_primitivet<'F'>),
-  (java_signature_primitivet<'I'>),
-  (java_signature_primitivet<'J'>),
-  (java_signature_primitivet<'S'>))
-{
-  REQUIRE(std::dynamic_pointer_cast<test_typet>(
-    std::dynamic_pointer_cast<java_signature_array_typet>(
-      java_signature_parse(std::string{"["} + test_typet::signature()))
-      ->element_type));
-}
-
 TEST_CASE("Parse non-generic class type java signature",
   "[core][java_bytecode][java_signature_parser]")
 {
@@ -73,17 +45,6 @@ TEST_CASE("Parse non-generic class type java signature",
   REQUIRE(simple_class_type);
   REQUIRE(simple_class_type->identifier == "cod");
   REQUIRE(simple_class_type->arguments.empty());
-}
-
-TEST_CASE("Parse array of class java signature",
-  "[core][java_bytecode][java_signature_parser]")
-{
-  REQUIRE(
-    std::dynamic_pointer_cast<java_signature_simple_class_typet>(
-      std::dynamic_pointer_cast<java_signature_array_typet>(
-        java_signature_parse("[Lcod;"))
-        ->element_type)
-      ->identifier == "cod");
 }
 
 TEST_CASE("Parse generic class type java signature with one parameter",
@@ -200,6 +161,45 @@ TEST_CASE("Parse generic class type java signature with wildcard parameters",
       simple_class_type->arguments[1].field_type);
   REQUIRE(second_type_variable);
   REQUIRE(second_type_variable->identifier == "V");
+}
+
+TEST_CASE("Parse array of type variable java signature",
+  "[core][java_bytecode][java_signature_parser]")
+{
+  REQUIRE(
+    std::dynamic_pointer_cast<java_signature_type_variablet>(
+      std::dynamic_pointer_cast<java_signature_array_typet>(
+        java_signature_parse("[Tfish;"))
+        ->element_type)
+      ->identifier == "fish");
+}
+
+TEMPLATE_TEST_CASE(
+  "Parse primitive array java signatures",
+  "[core][java_bytecode][java_signature_parser]",
+  (java_signature_primitivet<'B'>),
+  (java_signature_primitivet<'C'>),
+  (java_signature_primitivet<'D'>),
+  (java_signature_primitivet<'F'>),
+  (java_signature_primitivet<'I'>),
+  (java_signature_primitivet<'J'>),
+  (java_signature_primitivet<'S'>))
+{
+  REQUIRE(std::dynamic_pointer_cast<test_typet>(
+    std::dynamic_pointer_cast<java_signature_array_typet>(
+      java_signature_parse(std::string{"["} + test_typet::signature()))
+      ->element_type));
+}
+
+TEST_CASE("Parse array of class java signature",
+  "[core][java_bytecode][java_signature_parser]")
+{
+  REQUIRE(
+    std::dynamic_pointer_cast<java_signature_simple_class_typet>(
+      std::dynamic_pointer_cast<java_signature_array_typet>(
+        java_signature_parse("[Lcod;"))
+        ->element_type)
+      ->identifier == "cod");
 }
 
 TEST_CASE("Parse array of array of type variable java signature",
