@@ -26,6 +26,7 @@ struct buffer_state_deletert final
   void operator() (YY_BUFFER_STATE buffer) const
   {
     java_signature__delete_buffer(buffer);
+    java_signature_lex_destroy();
   }
 };
 
