@@ -48,3 +48,14 @@ TEMPLATE_TEST_CASE(
       java_signature_parse(std::string{"["} + test_typet::signature()))
       ->element_type));
 }
+
+TEST_CASE("Parse non-generic class type java signature",
+  "[core][java_bytecode][java_signature_parser]")
+{
+  const auto simple_class_type =
+    std::dynamic_pointer_cast<java_signature_simple_class_typet>(
+      java_signature_parse("Lfish;"));
+  REQUIRE(simple_class_type);
+  REQUIRE(simple_class_type->identifier == "fish");
+  REQUIRE(simple_class_type->arguments.empty());
+}
