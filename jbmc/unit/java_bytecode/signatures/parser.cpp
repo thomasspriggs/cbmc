@@ -32,6 +32,17 @@ TEST_CASE("Parse array of type variable java signature",
       ->identifier == "fish");
 }
 
+TEST_CASE("Parse array of class java signature",
+  "[core][java_bytecode][java_signature_parser]")
+{
+  REQUIRE(
+    std::dynamic_pointer_cast<java_signature_simple_class_typet>(
+      std::dynamic_pointer_cast<java_signature_array_typet>(
+        java_signature_parse("[Lcod;"))
+        ->element_type)
+      ->identifier == "cod");
+}
+
 TEMPLATE_TEST_CASE(
   "Parse primitive java signatures",
   "[core][java_bytecode][java_signature_parser]",
