@@ -139,13 +139,8 @@ WildcardIndicatorOptional
   ;
 
 ArrayTypeSignature
-  : '[' TypeSignature
+  : '[' JavaTypeSignature
   {
     $$ = std::make_shared<java_signature_array_typet>(std::move($2));
   }
-  ;
-
-TypeSignature
-  : ReferenceTypeSignature
-  | BaseType
   ;
