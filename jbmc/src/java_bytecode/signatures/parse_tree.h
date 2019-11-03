@@ -27,11 +27,18 @@ resultt &checked_cast(java_signature_baset &input)
   return *result;
 }
 
-template <char type_parameter>
+template <char signature_parameter>
 struct java_signature_primitivet final : public java_signature_baset
 {
+  static_assert(
+    signature_parameter == 'B' || signature_parameter == 'C' ||
+      signature_parameter == 'D' || signature_parameter == 'F' ||
+      signature_parameter == 'I' || signature_parameter == 'J' ||
+      signature_parameter == 'S',
+    "signature_parameter must be valid java primitive signature");
+
   static constexpr char signature() {
-    return type_parameter;
+    return signature_parameter;
   };
 
   ~java_signature_primitivet() override = default;
