@@ -1790,39 +1790,47 @@ bit_field_size:
 enum_name:
           enum_key
           gcc_type_attribute_opt
+          //enum_underlying_type_opt
           {
             // an anon enum
           }
           '{' enumerator_list_opt '}'
           gcc_type_attribute_opt
         {
-          parser_stack($1).operands().swap(parser_stack($5).operands());
-          $$=merge($1, merge($2, $7)); // throw in the gcc attributes
+          //parser_stack($1).operands().swap(parser_stack($6).operands());
+          //$$=merge($1, merge($2, $8)); // throw in the gcc attributes
         }
         | enum_key
           gcc_type_attribute_opt
           identifier_or_typedef_name
+          enum_underlying_type_opt
           {
             // an enum with tag
-            parser_stack($1).set(ID_tag, parser_stack($3));
+            //parser_stack($1).set(ID_tag, parser_stack($3));
           }
           '{' enumerator_list_opt '}'
           gcc_type_attribute_opt
         {
-          parser_stack($1).operands().swap(parser_stack($6).operands());
-          $$=merge($1, merge($2, $8)); // throw in the gcc attributes
+          //parser_stack($1).operands().swap(parser_stack($7).operands());
+          //$$=merge($1, merge($2, $9)); // throw in the gcc attributes
         }
         | enum_key
           gcc_type_attribute_opt
           identifier_or_typedef_name
+          //enum_underlying_type_opt
           gcc_type_attribute_opt
         {
-          parser_stack($1).id(ID_c_enum_tag); // tag only
-          parser_stack($1).set(ID_tag, parser_stack($3));
-          $$=merge($1, merge($2, $4)); // throw in the gcc attributes
+          //parser_stack($1).id(ID_c_enum_tag); // tag only
+          //parser_stack($1).set(ID_tag, parser_stack($3));
+          //$$=merge($1, merge($2, $5)); // throw in the gcc attributes
         }
         ;
-        
+
+enum_underlying_type_opt:
+         /* empty */
+         | ':' TOK_INT
+         ;
+
 enum_key: TOK_ENUM
         {
           $$=$1;
@@ -2915,12 +2923,12 @@ KnR_sue_declaration_specifier:
           parser_stack($2).set(ID_tag, parser_stack($3));
           $$=merge($1, merge($2, $4));
         }
-        | KnR_declaration_qualifier_list enum_key identifier_or_typedef_name gcc_type_attribute_opt
+        /*| KnR_declaration_qualifier_list enum_key identifier_or_typedef_name gcc_type_attribute_opt
         {
           parser_stack($2).id(ID_c_enum_tag);
           parser_stack($2).set(ID_tag, parser_stack($3));
           $$=merge($1, merge($2, $4));
-        }
+        }*/
         ;
 
         /* The following is stripped down because of conflicts due to gcc type attributes! */
