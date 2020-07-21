@@ -1791,15 +1791,14 @@ enum_name:
           enum_key
           gcc_type_attribute_opt
           identifier_or_typedef_name_opt
-          {
-            // an enum with tag
-            if(parser_stack($3).is_not_nil())
-              parser_stack($1).set(ID_tag, parser_stack($3));
-          }
           enum_underlying_type_opt
           '{' enumerator_list_opt '}'
           gcc_type_attribute_opt
         {
+          // an enum with tag
+          if(parser_stack($3).is_not_nil())
+            parser_stack($1).set(ID_tag, parser_stack($3));
+
           parser_stack($1).operands().swap(parser_stack($6).operands());
           $$=merge($1, merge($2, $8)); // throw in the gcc attributes
         }
@@ -1819,6 +1818,9 @@ enum_underlying_type_opt:
           init($$);
         }
         | ':' TOK_INT
+        {
+          $$ = $2;
+        }
         ;
 
 enum_key: TOK_ENUM
