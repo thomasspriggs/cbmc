@@ -1790,46 +1790,36 @@ bit_field_size:
 enum_name:
           enum_key
           gcc_type_attribute_opt
-          //enum_underlying_type_opt
-          {
-            // an anon enum
-          }
-          '{' enumerator_list_opt '}'
-          gcc_type_attribute_opt
-        {
-          //parser_stack($1).operands().swap(parser_stack($6).operands());
-          //$$=merge($1, merge($2, $8)); // throw in the gcc attributes
-        }
-        | enum_key
-          gcc_type_attribute_opt
-          identifier_or_typedef_name
-          enum_underlying_type_opt
+          identifier_or_typedef_name_opt
           {
             // an enum with tag
-            //parser_stack($1).set(ID_tag, parser_stack($3));
+            if(parser_stack($3).is_not_nil())
+              parser_stack($1).set(ID_tag, parser_stack($3));
           }
+          enum_underlying_type_opt
           '{' enumerator_list_opt '}'
           gcc_type_attribute_opt
         {
-          //parser_stack($1).operands().swap(parser_stack($7).operands());
-          //$$=merge($1, merge($2, $9)); // throw in the gcc attributes
-        }
-        | enum_key
-          gcc_type_attribute_opt
-          identifier_or_typedef_name
-          //enum_underlying_type_opt
-          gcc_type_attribute_opt
-        {
-          //parser_stack($1).id(ID_c_enum_tag); // tag only
-          //parser_stack($1).set(ID_tag, parser_stack($3));
-          //$$=merge($1, merge($2, $5)); // throw in the gcc attributes
+          parser_stack($1).operands().swap(parser_stack($6).operands());
+          $$=merge($1, merge($2, $8)); // throw in the gcc attributes
         }
         ;
 
+identifier_or_typedef_name_opt:
+        /* empty */
+        {
+          init($$);
+        }
+        | identifier_or_typedef_name
+        ;
+
 enum_underlying_type_opt:
-         /* empty */
-         | ':' TOK_INT
-         ;
+        /* empty */
+        {
+          init($$);
+        }
+        | ':' TOK_INT
+        ;
 
 enum_key: TOK_ENUM
         {
