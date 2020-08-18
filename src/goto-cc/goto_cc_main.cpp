@@ -56,7 +56,7 @@ int main(int argc, const char **argv)
   if(argv==nullptr || argc<1)
   {
     std::cerr << "failed to determine base name\n";
-    return 1;
+       return 1;
   }
 
   #ifdef _MSC_VER
