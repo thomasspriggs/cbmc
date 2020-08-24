@@ -19,8 +19,9 @@ jobs:
     - uses: actions/checkout@v1
 
     - name: build CBMC tools
-      run: make -C src minisat2-download
-      run: make -C src cbmc.dir goto-cc.dir goto-diff.dir
+      run: |
+        make -C src minisat2-download
+        make -C src cbmc.dir goto-cc.dir goto-diff.dir
 
     - name: get Xen 4.13
       run: git clone git://xenbits.xen.org/xen.git xen_4_13 && cd xen_4_13 && git reset --hard RELEASE-4.13.0
