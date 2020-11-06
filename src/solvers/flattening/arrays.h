@@ -69,8 +69,7 @@ protected:
   // The list of all equalities between arrays.
   // References to objects in `array_equalities` need to be stable because
   // elements are added while references are held.
-  typedef std::list<array_equalityt> array_equalitiest;
-  array_equalitiest array_equalities;
+  std::list<array_equalityt> array_equalities;
 
   // This is used to find the clusters of arrays being compared.
   union_find<exprt, irep_hash> arrays;
@@ -79,8 +78,7 @@ protected:
   typedef std::set<exprt> index_sett;
   // References to values in `index_map` need to be stable because
   // elements are added while references are held.
-  typedef std::map<std::size_t, index_sett> index_mapt;
-  index_mapt index_map;
+  std::map<std::size_t, index_sett> index_map;
 
   enum class lazy_typet
   {
