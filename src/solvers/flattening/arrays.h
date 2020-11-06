@@ -45,7 +45,7 @@ public:
   }
 
   // NOLINTNEXTLINE(readability/identifiers)
-  typedef equalityt SUB;
+  using SUB = equalityt;
 
   literalt record_array_equality(const equal_exprt &expr);
   void record_array_index(const index_exprt &expr);
@@ -75,7 +75,7 @@ protected:
   union_find<exprt, irep_hash> arrays;
 
   // This tracks the array indices for each array.
-  typedef std::set<exprt> index_sett;
+  using index_sett = std::set<exprt>;
   // References to values in `index_map` need to be stable because
   // elements are added while references are held.
   std::map<std::size_t, index_sett> index_map;
