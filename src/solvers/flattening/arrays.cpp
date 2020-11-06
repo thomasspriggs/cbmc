@@ -440,10 +440,10 @@ void arrayst::add_array_constraints_equality(
   for(const auto &index : index_set)
   {
     const typet &subtype1 = array_equality.f1.type().subtype();
-    index_exprt index_expr1(array_equality.f1, index, subtype1);
+    const index_exprt index_expr1(array_equality.f1, index, subtype1);
 
     const typet &subtype2 = array_equality.f2.type().subtype();
-    index_exprt index_expr2(array_equality.f2, index, subtype2);
+    const index_exprt index_expr2(array_equality.f2, index, subtype2);
 
     DATA_INVARIANT(
       index_expr1.type()==index_expr2.type(),
