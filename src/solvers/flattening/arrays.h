@@ -61,23 +61,22 @@ protected:
     exprt f1, f2;
   };
 
-  // the list of all equalities between arrays
-  // references to objects in this container need to be stable as
-  // elements are added while references are held
+  // The list of all equalities between arrays.
+  // References to objects in `array_equalities` need to be stable because
+  // elements are added while references are held.
   typedef std::list<array_equalityt> array_equalitiest;
   array_equalitiest array_equalities;
 
-  // this is used to find the clusters of arrays being compared
+  // This is used to find the clusters of arrays being compared.
   union_find<exprt, irep_hash> arrays;
 
-  // this tracks the array indicies for each array
+  // This tracks the array indices for each array.
   typedef std::set<exprt> index_sett;
-  // references to values in this container need to be stable as
-  // elements are added while references are held
+  // References to values in `index_map` need to be stable because
+  // elements are added while references are held.
   typedef std::map<std::size_t, index_sett> index_mapt;
   index_mapt index_map;
 
-  // adds array constraints lazily
   enum class lazy_typet
   {
     ARRAY_ACKERMANN,
@@ -104,10 +103,11 @@ protected:
   bool lazy_arrays;
   bool incremental_cache;
   std::list<lazy_constraintt> lazy_array_constraints;
+  // Adds array constraints lazily.
   void add_array_constraint(const lazy_constraintt &lazy, bool refine = true);
   std::map<exprt, bool> expr_map;
 
-  // adds all the constraints eagerly
+  // Adds all the constraints eagerly.
   void add_array_constraints();
   void add_array_Ackermann_constraints();
   void add_array_constraints_equality(
