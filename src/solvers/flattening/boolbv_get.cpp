@@ -344,7 +344,7 @@ exprt boolbvt::bv_get_unbounded_array(const exprt &expr) const
     const auto number = arrays.find_number(*opt_num);
 
     assert(number<index_map.size());
-    index_mapt::const_iterator it=index_map.find(number);
+    const auto it = index_map.find(number);
     assert(it!=index_map.end());
     const index_sett &index_set=it->second;
 
