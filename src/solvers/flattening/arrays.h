@@ -61,18 +61,18 @@ protected:
     exprt f1, f2;
   };
 
-  // The list of all equalities between arrays.
-  // References to objects in `array_equalities` need to be stable because
-  // elements are added while references are held.
+  /// \brief The list of all equalities between arrays.
+  /// \remark References to objects in `array_equalities` need to be stable
+  ///   because elements are added while references are held.
   std::list<array_equalityt> array_equalities;
 
-  // This is used to find the clusters of arrays being compared.
+  /// \brief This is used to find the clusters of arrays being compared.
   union_find<exprt, irep_hash> arrays;
 
-  // This tracks the array indices for each array.
   using index_sett = std::set<exprt>;
-  // References to values in `index_map` need to be stable because
-  // elements are added while references are held.
+  /// \brief This tracks the array indices for each array.
+  /// \remark References to values in `index_map` need to be stable because
+  ///   elements are added while references are held.
   std::map<std::size_t, index_sett> index_map;
 
   enum class lazy_typet
@@ -101,13 +101,14 @@ protected:
   bool lazy_arrays;
   bool incremental_cache;
   std::list<lazy_constraintt> lazy_array_constraints;
-  // Adds array constraints lazily.
+  /// \brief Adds array constraints lazily.
   void add_array_constraint(const lazy_constraintt &lazy, bool refine = true);
   std::map<exprt, bool> expr_map;
 
-  // Adds all the constraints eagerly.
+  /// \brief Adds all the constraints eagerly.
   void add_array_constraints();
   void add_array_Ackermann_constraints();
+  /// \brief Adds constraints of the form `x=y => x[i]=y[i]`.
   void add_array_constraints_equality(
     const index_sett &index_set, const array_equalityt &array_equality);
   void add_array_constraints(

@@ -427,8 +427,6 @@ void arrayst::add_array_constraints_equality(
   const index_sett &index_set,
   const array_equalityt &array_equality)
 {
-  // add constraints x=y => x[i]=y[i]
-
   for(const auto &index : index_set)
   {
     const typet &subtype1 = array_equality.f1.type().subtype();
