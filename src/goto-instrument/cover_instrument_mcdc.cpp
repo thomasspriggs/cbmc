@@ -528,9 +528,9 @@ bool has_mcdc_pair(
   const std::set<exprt> &conditions,
   const exprt &decision)
 {
-  for(auto y1 : expr_set)
+  for(const auto &y1 : expr_set)
   {
-    for(auto y2 : expr_set)
+    for(const auto &y2 : expr_set)
     {
       if(is_mcdc_pair(y1, y2, c, conditions, decision))
       {
