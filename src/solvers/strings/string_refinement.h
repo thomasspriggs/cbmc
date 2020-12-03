@@ -102,7 +102,7 @@ private:
   string_constraint_generatort generator;
 
   // Simple constraints that have been given to the solver
-  std::set<exprt> seen_instances;
+  std::set<exprt, irept::lesst> seen_instances;
 
   string_axiomst axioms;
 

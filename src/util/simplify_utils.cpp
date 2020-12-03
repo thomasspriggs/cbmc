@@ -22,7 +22,7 @@ bool sort_operands(exprt::operandst &operands)
     exprt::operandst::const_iterator next_it=it;
     next_it++;
 
-    if(next_it!=operands.end() && *next_it < *it)
+    if(next_it!=operands.end() && next_it->ordering(*it))
     {
       do_sort=true;
       break;
@@ -32,7 +32,7 @@ bool sort_operands(exprt::operandst &operands)
   if(!do_sort)
     return true;
 
-  std::sort(operands.begin(), operands.end());
+  std::sort(operands.begin(), operands.end(), irept::lesst{});
 
   return false;
 }

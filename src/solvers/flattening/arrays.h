@@ -76,7 +76,7 @@ protected:
   union_find<exprt, irep_hash> arrays;
 
   // this tracks the array indicies for each array
-  typedef std::set<exprt> index_sett;
+  typedef std::set<exprt, irept::lesst> index_sett;
   // references to values in this container need to be stable as
   // elements are added while references are held
   typedef std::map<std::size_t, index_sett> index_mapt;
@@ -111,7 +111,7 @@ protected:
   bool get_array_constraints;
   std::list<lazy_constraintt> lazy_array_constraints;
   void add_array_constraint(const lazy_constraintt &lazy, bool refine = true);
-  std::map<exprt, bool> expr_map;
+  std::map<exprt, bool, irept::lesst> expr_map;
 
   enum class constraint_typet
   {
