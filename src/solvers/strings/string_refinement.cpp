@@ -1484,7 +1484,9 @@ static std::pair<bool, std::vector<exprt>> check_axioms(
           index_exprt(not_contain_witnesses.at(axiom), val);
         const exprt comp_val = simplify_sum(plus_exprt(val, func_val));
 
-        std::set<std::pair<exprt, exprt>> indices;
+        std::
+          set<std::pair<exprt, exprt>, pair_lesst<irept::lesst, irept::lesst>>
+            indices;
         indices.insert(std::pair<exprt, exprt>(comp_val, func_val));
         const exprt counter =
           ::instantiate_not_contains(axiom, indices, not_contain_witnesses)[0];
@@ -1751,15 +1753,14 @@ static std::vector<exprt> instantiate(
     current_index_set0 != index_set.current.end() &&
     current_index_set1 != index_set.current.end())
   {
-    typedef std::pair<exprt, exprt> expr_pairt;
-    std::set<expr_pairt> index_pairs;
+    index_pairst index_pairs;
 
     for(const auto &ic0 : current_index_set0->second)
       for(const auto &i1 : index_set1->second)
-        index_pairs.insert(expr_pairt(ic0, i1));
+        index_pairs.emplace(ic0, i1);
     for(const auto &ic1 : current_index_set1->second)
       for(const auto &i0 : index_set0->second)
-        index_pairs.insert(expr_pairt(i0, ic1));
+        index_pairs.emplace(i0, ic1);
 
     return ::instantiate_not_contains(axiom, index_pairs, witnesses);
   }

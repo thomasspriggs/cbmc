@@ -15,6 +15,8 @@ Author: Jesse Sigal, jesse.sigal@diffblue.com
 #include "string_constraint.h"
 #include "string_constraint_generator.h"
 
+#include <util/pair_less.h>
+
 /// Substitute `qvar` the universally quantified variable of `axiom`, by
 /// an index `val`, in `axiom`, so that the index used for `str` equals `val`.
 /// For instance, if `axiom` corresponds to \f$\forall q.\ s[q+x]='a' \land
@@ -29,9 +31,12 @@ exprt instantiate(
   const exprt &str,
   const exprt &val);
 
+using index_pairst =
+  std::set<std::pair<exprt, exprt>, pair_lesst<irept::lesst, irept::lesst>>;
+
 std::vector<exprt> instantiate_not_contains(
   const string_not_contains_constraintt &axiom,
-  const std::set<std::pair<exprt, exprt>> &index_pairs,
+  const index_pairst &index_pairs,
   const std::unordered_map<string_not_contains_constraintt, symbol_exprt>
     &witnesses);
 
