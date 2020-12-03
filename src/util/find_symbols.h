@@ -51,10 +51,10 @@ void find_symbols(
 /// Find sub expressions with id ID_symbol
 void find_symbols(
   const exprt &src,
-  std::set<symbol_exprt> &dest);
+  std::set<symbol_exprt, irept::lesst> &dest);
 
 /// Find sub expressions with id ID_symbol
-std::set<symbol_exprt> find_symbols(const exprt &src);
+std::set<symbol_exprt, irept::lesst> find_symbols(const exprt &src);
 
 /// Find identifiers of the sub expressions with id ID_symbol
 std::unordered_set<irep_idt> find_symbol_identifiers(const exprt &src);

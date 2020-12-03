@@ -63,7 +63,7 @@ bool has_symbol(
 
 void find_symbols(
   const exprt &src,
-  std::set<symbol_exprt> &dest)
+  std::set<symbol_exprt, irept::lesst> &dest)
 {
   src.visit_pre([&dest](const exprt &e) {
     if(e.id() == ID_symbol)
@@ -71,7 +71,7 @@ void find_symbols(
   });
 }
 
-std::set<symbol_exprt> find_symbols(const exprt &src)
+std::set<symbol_exprt, irept::lesst> find_symbols(const exprt &src)
 {
   return make_range(src.depth_begin(), src.depth_end())
     .filter([](const exprt &e) { return e.id() == ID_symbol; })
