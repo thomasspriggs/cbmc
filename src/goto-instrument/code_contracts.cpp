@@ -648,7 +648,7 @@ bool code_contractst::add_pointer_checks(const std::string &function_name)
 
   // Create a list of variables that are okay to assign.
   std::set<exprt> freely_assignable_exprs;
-  for(code_typet::parametert param : type.parameters())
+  for(const code_typet::parametert &param : type.parameters())
   {
     freely_assignable_exprs.insert(param);
   }
