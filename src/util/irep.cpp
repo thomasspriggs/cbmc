@@ -199,7 +199,7 @@ bool irept::operator==(const irept &other) const
   return true;
 }
 
-bool irept::lesst::operator()(const irept &left, const irept &right)
+bool irept::lesst::operator()(const irept &left, const irept &right) const
 {
   return left.ordering(right);
 }

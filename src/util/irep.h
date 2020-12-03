@@ -460,7 +460,7 @@ public:
 
   bool operator==(const irept &other) const;
   struct lesst {
-    bool operator()(const irept &left, const irept &right);
+    bool operator()(const irept &left, const irept &right) const;
   };
 
   bool operator!=(const irept &other) const
