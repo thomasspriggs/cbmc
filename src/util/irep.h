@@ -459,6 +459,9 @@ public:
   void move_to_named_sub(const irep_namet &name, irept &irep);
 
   bool operator==(const irept &other) const;
+  struct lesst {
+    bool operator()(const irept &left, const irept &right);
+  };
 
   bool operator!=(const irept &other) const
   {

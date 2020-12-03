@@ -199,6 +199,11 @@ bool irept::operator==(const irept &other) const
   return true;
 }
 
+bool irept::lesst::operator()(const irept &left, const irept &right)
+{
+  return left.ordering(right);
+}
+
 bool irept::full_eq(const irept &other) const
 {
   #ifdef SHARING
