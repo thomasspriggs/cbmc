@@ -470,7 +470,6 @@ public:
     std::swap(irep.data, data);
   }
 
-  bool operator<(const irept &other) const;
   bool ordering(const irept &other) const;
 
   int compare(const irept &i) const;
