@@ -401,12 +401,6 @@ int irept::compare(const irept &i) const
   return 0;
 }
 
-/// defines ordering on the internal representation
-bool irept::operator<(const irept &other) const
-{
-  return ordering(other);
-}
-
 #ifdef IREP_HASH_STATS
 unsigned long long irep_hash_cnt=0;
 #endif
