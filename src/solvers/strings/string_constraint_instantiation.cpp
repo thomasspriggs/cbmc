@@ -210,7 +210,7 @@ exprt instantiate(
 /// \return the lemmas produced through instantiation
 std::vector<exprt> instantiate_not_contains(
   const string_not_contains_constraintt &axiom,
-  const std::set<std::pair<exprt, exprt>> &index_pairs,
+  const index_pairst &index_pairs,
   const std::unordered_map<string_not_contains_constraintt, symbol_exprt>
     &witnesses)
 {
