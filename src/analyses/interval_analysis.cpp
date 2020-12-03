@@ -30,7 +30,7 @@ void instrument_intervals(
   const ait<interval_domaint> &interval_analysis,
   goto_functionst::goto_functiont &goto_function)
 {
-  std::set<symbol_exprt> symbols;
+  std::set<symbol_exprt, irept::lesst> symbols;
 
   for(const auto &i : goto_function.body.instructions)
     i.apply([&symbols](const exprt &e) { find_symbols(e, symbols); });

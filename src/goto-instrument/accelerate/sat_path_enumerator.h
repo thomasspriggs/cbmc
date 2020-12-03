@@ -74,7 +74,7 @@ protected:
   goto_programt::targett loop_header;
 
   typedef std::map<goto_programt::targett, exprt> distinguish_mapt;
-  typedef std::map<exprt, bool> distinguish_valuest;
+  typedef std::map<exprt, bool, irept::lesst> distinguish_valuest;
 
   acceleration_utilst utils;
   guard_managert &guard_manager;

@@ -401,7 +401,7 @@ void code_contractst::instrument_assigns_statement(
   goto_programt &program,
   exprt &assigns,
   std::vector<exprt> &assigns_references,
-  std::set<exprt> &freely_assignable_exprs)
+  std::set<exprt, irept::lesst> &freely_assignable_exprs)
 {
   INVARIANT(
     instruction_iterator->is_assign(),
@@ -426,7 +426,7 @@ void code_contractst::instrument_call_statement(
   goto_programt &program,
   exprt &assigns,
   std::vector<exprt> &aliasable_references,
-  std::set<exprt> &freely_assignable_exprs)
+  std::set<exprt, irept::lesst> &freely_assignable_exprs)
 {
   INVARIANT(
     instruction_iterator->is_function_call(),
@@ -647,7 +647,7 @@ bool code_contractst::add_pointer_checks(const std::string &function_name)
     function_symbol, function_id, standin_decls, original_references);
 
   // Create a list of variables that are okay to assign.
-  std::set<exprt> freely_assignable_exprs;
+  std::set<exprt, irept::lesst> freely_assignable_exprs;
   for(const code_typet::parametert &param : type.parameters())
   {
     freely_assignable_exprs.insert(param);

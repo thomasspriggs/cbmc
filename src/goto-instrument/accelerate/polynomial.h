@@ -36,7 +36,7 @@ public:
   bool contains(const exprt &var);
 };
 
-typedef std::map<exprt, exprt> substitutiont;
+typedef std::map<exprt, exprt, irept::lesst> substitutiont;
 
 class polynomialt
 {

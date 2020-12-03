@@ -577,7 +577,7 @@ jsont variable_sensitivity_dependence_domaint::output_json(
     json_stringt(dep.first->source_location.as_string());
     link["type"] = json_stringt("data");
 
-    const std::set<exprt> &expr_set = dep.second;
+    const std::set<exprt, irept::lesst> &expr_set = dep.second;
     json_arrayt &expressions = link["expressions"].make_array();
 
     for(const exprt &e : expr_set)

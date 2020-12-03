@@ -109,7 +109,7 @@ protected:
     goto_programt &program,
     exprt &assigns,
     std::vector<exprt> &original_references,
-    std::set<exprt> &freely_assignable_exprs);
+    std::set<exprt, irept::lesst> &freely_assignable_exprs);
 
   /// Inserts an assertion statement into program before the function call at
   /// ins_it, to ensure that any memory which may be written by the call is
@@ -120,7 +120,7 @@ protected:
     goto_programt &program,
     exprt &assigns,
     std::vector<exprt> &assigns_references,
-    std::set<exprt> &freely_assignable_exprs);
+    std::set<exprt, irept::lesst> &freely_assignable_exprs);
 
   /// Creates a local variable declaration for each expression in the assigns
   /// clause (of the function given by f_sym), and stores them in created_decls.

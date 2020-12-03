@@ -49,7 +49,7 @@ Author: Matt Lewis
 bool disjunctive_polynomial_accelerationt::accelerate(
   path_acceleratort &accelerator)
 {
-  std::map<exprt, polynomialt> polynomials;
+  std::map<exprt, polynomialt, irept::lesst> polynomials;
   scratch_programt program{symbol_table, message_handler, guard_manager};
 
   accelerator.clear();
@@ -209,7 +209,7 @@ bool disjunctive_polynomial_accelerationt::accelerate(
 
     if(path_acceleration.fit_polynomial(assigns, target, poly))
     {
-      std::map<exprt, polynomialt> this_poly;
+      std::map<exprt, polynomialt, irept::lesst> this_poly;
       this_poly[target]=poly;
 
       if(utils.check_inductive(this_poly, accelerator.path, guard_manager))

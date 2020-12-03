@@ -21,7 +21,7 @@ Date:   April 2017
 
 void collect_deref_expr(
   const exprt &src,
-  std::set<dereference_exprt> &dest)
+  std::set<dereference_exprt, irept::lesst> &dest)
 {
   src.visit_pre([&dest](const exprt &e) {
     if(e.id() == ID_dereference)
@@ -40,7 +40,7 @@ void mm_io(
       it!=goto_function.body.instructions.end();
       it++)
   {
-    std::set<dereference_exprt> deref_expr_w, deref_expr_r;
+    std::set<dereference_exprt, irept::lesst> deref_expr_w, deref_expr_r;
 
     if(it->is_assign())
     {

@@ -188,24 +188,22 @@ unsigned custom_bitvector_analysist::get_bit_nr(
     return bits.number("(unknown)");
 }
 
-std::set<exprt> custom_bitvector_analysist::aliases(
+std::set<exprt, irept::lesst> custom_bitvector_analysist::aliases(
   const exprt &src,
   locationt loc)
 {
   if(src.id()==ID_symbol)
   {
-    std::set<exprt> result;
-    result.insert(src);
-    return result;
+    return {src};
   }
   else if(src.id()==ID_dereference)
   {
     exprt pointer=to_dereference_expr(src).pointer();
 
-    const std::set<exprt> alias_set =
+    const std::set<exprt, irept::lesst> alias_set =
       local_may_alias_factory(loc).get(loc, pointer);
 
-    std::set<exprt> result;
+    std::set<exprt, irept::lesst> result;
 
     for(const auto &alias : alias_set)
       if(alias.type().id() == ID_pointer)
@@ -220,7 +218,7 @@ std::set<exprt> custom_bitvector_analysist::aliases(
     return aliases(to_typecast_expr(src).op(), loc);
   }
   else
-    return std::set<exprt>();
+    return {};
 }
 
 void custom_bitvector_domaint::assign_struct_rec(
@@ -246,7 +244,7 @@ void custom_bitvector_domaint::assign_struct_rec(
   else
   {
     // may alias other stuff
-    std::set<exprt> lhs_set=cba.aliases(lhs, from);
+    std::set<exprt, irept::lesst> lhs_set=cba.aliases(lhs, from);
 
     vectorst rhs_vectors=get_rhs(rhs);
 
@@ -377,7 +375,7 @@ void custom_bitvector_domaint::transform(
                 dereference_exprt deref(lhs);
 
                 // may alias other stuff
-                std::set<exprt> lhs_set=cba.aliases(deref, from);
+                const auto lhs_set=cba.aliases(deref, from);
 
                 for(const auto &l : lhs_set)
                 {
@@ -423,7 +421,7 @@ void custom_bitvector_domaint::transform(
               // assignments arguments -> parameters
               symbol_exprt p=ns.lookup(p_identifier).symbol_expr();
               // may alias other stuff
-              std::set<exprt> lhs_set=cba.aliases(p, from);
+              const auto lhs_set=cba.aliases(p, from);
 
               vectorst rhs_vectors=get_rhs(*arg_it);
 
@@ -509,7 +507,7 @@ void custom_bitvector_domaint::transform(
             dereference_exprt deref(lhs);
 
             // may alias other stuff
-            std::set<exprt> lhs_set=cba.aliases(deref, from);
+            const auto lhs_set=cba.aliases(deref, from);
 
             for(const auto &l : lhs_set)
             {

@@ -70,15 +70,15 @@ public:
     polynomialt &polynomial);
 
   bool check_inductive(
-    std::map<exprt, polynomialt> polynomials,
+    std::map<exprt, polynomialt, irept::lesst> polynomials,
     patht &path,
     guard_managert &guard_manager);
   void stash_variables(scratch_programt &program,
                        expr_sett modified,
                        substitutiont &substitution);
   void stash_polynomials(scratch_programt &program,
-                         std::map<exprt, polynomialt> &polynomials,
-                         std::map<exprt, exprt> &stashed,
+                         std::map<exprt, polynomialt, irept::lesst> &polynomials,
+                         std::map<exprt, exprt, irept::lesst> &stashed,
                          patht &path);
 
   exprt precondition(patht &path);
@@ -86,7 +86,7 @@ public:
   void push_nondet(exprt &expr);
 
   bool do_assumptions(
-    std::map<exprt, polynomialt> polynomials,
+    std::map<exprt, polynomialt, irept::lesst> polynomials,
     patht &body,
     exprt &guard,
     guard_managert &guard_manager);
@@ -123,7 +123,7 @@ public:
 
   bool do_nonrecursive(
     goto_programt::instructionst &loop_body,
-    std::map<exprt, polynomialt> &polynomials,
+    std::map<exprt, polynomialt, irept::lesst> &polynomials,
     substitutiont &substitution,
     expr_sett &nonrecursive,
     scratch_programt &program);

@@ -112,7 +112,7 @@ void local_may_aliast::assign_lhs(
   }
 }
 
-std::set<exprt> local_may_aliast::get(
+std::set<exprt, irept::lesst> local_may_aliast::get(
   const goto_programt::const_targett t,
   const exprt &rhs) const
 {
@@ -125,7 +125,7 @@ std::set<exprt> local_may_aliast::get(
   object_sett result_tmp;
   get_rec(result_tmp, rhs, loc_info_src);
 
-  std::set<exprt> result;
+  std::set<exprt, irept::lesst> result;
 
   for(object_sett::const_iterator
       it=result_tmp.begin();

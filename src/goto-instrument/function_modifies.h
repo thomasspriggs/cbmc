@@ -23,7 +23,7 @@ public:
   {
   }
 
-  typedef std::set<exprt> modifiest;
+  typedef std::set<exprt, irept::lesst> modifiest;
 
   void get_modifies(
     const local_may_aliast &local_may_alias,

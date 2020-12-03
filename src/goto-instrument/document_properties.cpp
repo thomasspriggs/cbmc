@@ -271,7 +271,7 @@ document_propertiest::get_code(const source_locationt &source_location)
 
 void document_propertiest::doit()
 {
-  typedef std::map<source_locationt, doc_claimt> claim_sett;
+  typedef std::map<source_locationt, doc_claimt, irept::lesst> claim_sett;
   claim_sett claim_set;
 
   forall_goto_functions(f_it, goto_functions)

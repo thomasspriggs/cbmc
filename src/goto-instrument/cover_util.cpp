@@ -25,7 +25,7 @@ bool is_condition(const exprt &src)
   return true;
 }
 
-void collect_conditions_rec(const exprt &src, std::set<exprt> &dest)
+void collect_conditions_rec(const exprt &src, std::set<exprt, irept::lesst> &dest)
 {
   if(src.id() == ID_address_of)
   {
@@ -39,16 +39,16 @@ void collect_conditions_rec(const exprt &src, std::set<exprt> &dest)
     dest.insert(src);
 }
 
-std::set<exprt> collect_conditions(const exprt &src)
+std::set<exprt, irept::lesst> collect_conditions(const exprt &src)
 {
-  std::set<exprt> result;
+  std::set<exprt, irept::lesst> result;
   collect_conditions_rec(src, result);
   return result;
 }
 
-std::set<exprt> collect_conditions(const goto_programt::const_targett t)
+std::set<exprt, irept::lesst> collect_conditions(const goto_programt::const_targett t)
 {
-  std::set<exprt> result;
+  std::set<exprt, irept::lesst> result;
 
   t->apply([&result](const exprt &e) { collect_conditions_rec(e, result); });
 
@@ -66,7 +66,7 @@ void collect_operands(const exprt &src, std::vector<exprt> &dest)
   }
 }
 
-void collect_decisions_rec(const exprt &src, std::set<exprt> &dest)
+void collect_decisions_rec(const exprt &src, std::set<exprt, irept::lesst> &dest)
 {
   if(src.id() == ID_address_of)
   {
@@ -95,9 +95,9 @@ void collect_decisions_rec(const exprt &src, std::set<exprt> &dest)
   }
 }
 
-std::set<exprt> collect_decisions(const goto_programt::const_targett t)
+std::set<exprt, irept::lesst> collect_decisions(const goto_programt::const_targett t)
 {
-  std::set<exprt> result;
+  std::set<exprt, irept::lesst> result;
 
   t->apply([&result](const exprt &e) { collect_decisions_rec(e, result); });
 
