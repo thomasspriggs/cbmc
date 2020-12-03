@@ -1917,7 +1917,7 @@ static optionalt<exprt> find_counter_example(
 }
 
 /// \related string_constraintt
-typedef std::map<exprt, std::vector<exprt>> array_index_mapt;
+typedef std::map<exprt, std::vector<exprt>, irept::lesst> array_index_mapt;
 
 /// \related string_constraintt
 static array_index_mapt gather_indices(const exprt &expr)

@@ -208,7 +208,7 @@ protected:
 
   // for modeling structs as Z3 datatype, enabled when
   // use_datatype is set
-  typedef std::map<typet, std::string> datatype_mapt;
+  typedef std::map<typet, std::string, irept::lesst> datatype_mapt;
   datatype_mapt datatype_map;
 
   // for replacing various defined expressions:
@@ -217,7 +217,7 @@ protected:
   // ID_array
   // ID_string_constant
 
-  typedef std::map<exprt, irep_idt> defined_expressionst;
+  typedef std::map<exprt, irep_idt, irept::lesst> defined_expressionst;
   defined_expressionst defined_expressions;
 
   defined_expressionst object_sizes;

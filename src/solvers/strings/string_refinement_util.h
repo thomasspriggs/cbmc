@@ -59,8 +59,8 @@ utf16_constant_array_to_java(const array_exprt &arr, std::size_t length);
 
 struct index_set_pairt
 {
-  std::map<exprt, std::set<exprt>> cumulative;
-  std::map<exprt, std::set<exprt>> current;
+  std::map<exprt, std::set<exprt, irept::lesst>, irept::lesst> cumulative;
+  std::map<exprt, std::set<exprt, irept::lesst>, irept::lesst> current;
 };
 
 struct string_axiomst

@@ -302,7 +302,7 @@ private:
       depth_iterator_baset::push_expr(expr);
     return inserted;
   }
-  std::set<exprt> m_traversed;
+  std::set<exprt, irept::lesst> m_traversed;
 };
 
 #endif

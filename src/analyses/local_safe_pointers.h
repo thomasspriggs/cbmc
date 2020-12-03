@@ -29,7 +29,7 @@ class local_safe_pointerst
   {
     bool operator()(const exprt &e1, const exprt &e2) const
     {
-      return e1.type() != e2.type() && e1 < e2;
+      return e1.type() != e2.type() && irept::lesst{}(e1, e2);
     }
   };
 

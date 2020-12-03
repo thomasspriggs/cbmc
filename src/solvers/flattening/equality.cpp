@@ -16,7 +16,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 literalt equalityt::equality(const exprt &e1, const exprt &e2)
 {
-  if(e1<e2)
+  if(irept::lesst{}(e1, e2))
     return equality2(e1, e2);
   else
     return equality2(e2, e1);

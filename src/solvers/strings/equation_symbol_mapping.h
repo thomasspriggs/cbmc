@@ -35,7 +35,7 @@ public:
 
 private:
   /// Record index of the equations that contain a given expression
-  std::map<exprt, std::vector<std::size_t>> equations_containing;
+  std::map<exprt, std::vector<std::size_t>, irept::lesst> equations_containing;
   /// Record expressions that are contained in the equation with the given index
   std::unordered_map<std::size_t, std::vector<exprt>> strings_in_equation;
 };

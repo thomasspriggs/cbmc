@@ -41,14 +41,14 @@ public:
 protected:
   decision_proceduret &decision_procedure;
 
-  typedef std::set<function_application_exprt> applicationst;
+  typedef std::set<function_application_exprt, irept::lesst> applicationst;
 
   struct function_infot
   {
     applicationst applications;
   };
 
-  typedef std::map<exprt, function_infot> function_mapt;
+  typedef std::map<exprt, function_infot, irept::lesst> function_mapt;
   function_mapt function_map;
 
   virtual void add_function_constraints();
