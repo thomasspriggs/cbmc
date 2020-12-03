@@ -154,7 +154,7 @@ void cpp_typecheck_resolvet::remove_duplicates(
   old_identifiers.swap(identifiers);
 
   std::set<irep_idt> ids;
-  std::set<exprt> other;
+  std::set<exprt, irept::lesst> other;
 
   for(const auto &old_id : old_identifiers)
   {

@@ -57,7 +57,7 @@ bool polynomial_acceleratort::accelerate(
   }
 
   expr_sett targets;
-  std::map<exprt, polynomialt> polynomials;
+  std::map<exprt, polynomialt, irept::lesst> polynomials;
   scratch_programt program{symbol_table, message_handler, guard_manager};
   goto_programt::instructionst assigns;
 
@@ -138,7 +138,7 @@ bool polynomial_acceleratort::accelerate(
 
     if(fit_polynomial_sliced(sliced_assigns, target, influence, poly))
     {
-      std::map<exprt, polynomialt> this_poly;
+      std::map<exprt, polynomialt, irept::lesst> this_poly;
       this_poly[target]=poly;
 
       if(check_inductive(this_poly, assigns))
@@ -362,7 +362,7 @@ bool polynomial_acceleratort::fit_polynomial_sliced(
   // really be solving the path constraints a few times to get valid probe
   // values...
 
-  std::map<exprt, int> values;
+  std::map<exprt, int, irept::lesst> values;
 
   for(expr_sett::iterator it=influence.begin();
       it!=influence.end();
@@ -499,7 +499,7 @@ bool polynomial_acceleratort::fit_const(
 
 void polynomial_acceleratort::assert_for_values(
   scratch_programt &program,
-  std::map<exprt, int> &values,
+  std::map<exprt, int, irept::lesst> &values,
   std::set<std::pair<expr_listt, exprt> > &coefficients,
   int num_unwindings,
   goto_programt::instructionst &loop_body,
@@ -653,7 +653,7 @@ void polynomial_acceleratort::cone_of_influence(
 }
 
 bool polynomial_acceleratort::check_inductive(
-  std::map<exprt, polynomialt> polynomials,
+  std::map<exprt, polynomialt, irept::lesst> polynomials,
   goto_programt::instructionst &body)
 {
   // Checking that our polynomial is inductive with respect to the loop body is
@@ -731,7 +731,7 @@ bool polynomial_acceleratort::check_inductive(
 
 void polynomial_acceleratort::stash_polynomials(
   scratch_programt &program,
-  std::map<exprt, polynomialt> &polynomials,
+  std::map<exprt, polynomialt, irept::lesst> &polynomials,
   substitutiont &substitution,
   goto_programt::instructionst &body)
 {

@@ -29,8 +29,8 @@ class path_acceleratort
   path_acceleratort(patht &_path,
                goto_programt &pure,
                goto_programt &overflow,
-               std::set<exprt> &changed,
-               std::set<exprt> &dirty) :
+               std::set<exprt, irept::lesst> &changed,
+               std::set<exprt, irept::lesst> &dirty) :
     path(_path),
     changed_vars(changed),
     dirty_vars(dirty)
@@ -62,8 +62,8 @@ class path_acceleratort
   patht path;
   goto_programt pure_accelerator;
   goto_programt overflow_path;
-  std::set<exprt> changed_vars;
-  std::set<exprt> dirty_vars;
+  std::set<exprt, irept::lesst> changed_vars;
+  std::set<exprt, irept::lesst> dirty_vars;
 };
 
 #endif // CPROVER_GOTO_INSTRUMENT_ACCELERATE_ACCELERATOR_H

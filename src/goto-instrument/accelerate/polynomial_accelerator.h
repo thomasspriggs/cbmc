@@ -80,7 +80,7 @@ protected:
 
   void assert_for_values(
     scratch_programt &program,
-    std::map<exprt, int> &values,
+    std::map<exprt, int, irept::lesst> &values,
     std::set<std::pair<expr_listt, exprt>> &coefficients,
     int num_unwindings,
     goto_programt::instructionst &loop_body,
@@ -102,7 +102,7 @@ protected:
     polynomialt &polynomial);
 
   bool check_inductive(
-    std::map<exprt, polynomialt> polynomials,
+    std::map<exprt, polynomialt, irept::lesst> polynomials,
     goto_programt::instructionst &body);
   void stash_variables(
     scratch_programt &program,
@@ -110,14 +110,14 @@ protected:
     substitutiont &substitution);
   void stash_polynomials(
     scratch_programt &program,
-    std::map<exprt, polynomialt> &polynomials,
-    std::map<exprt, exprt> &stashed,
+    std::map<exprt, polynomialt, irept::lesst> &polynomials,
+    std::map<exprt, exprt, irept::lesst> &stashed,
     goto_programt::instructionst &body);
 
   exprt precondition(patht &path);
 
   bool do_assumptions(
-    std::map<exprt, polynomialt> polynomials,
+    std::map<exprt, polynomialt, irept::lesst> polynomials,
     patht &body,
     exprt &guard);
 

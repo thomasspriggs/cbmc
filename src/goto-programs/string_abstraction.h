@@ -43,7 +43,7 @@ protected:
   unsigned temporary_counter;
   message_handlert &message_handler;
 
-  typedef ::std::map< typet, typet > abstraction_types_mapt;
+  typedef ::std::map<typet, typet, irept::lesst> abstraction_types_mapt;
   abstraction_types_mapt abstraction_types_map;
 
   ::std::set< irep_idt > current_args;

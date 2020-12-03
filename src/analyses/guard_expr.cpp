@@ -79,7 +79,7 @@ guard_exprt &operator-=(guard_exprt &g1, const guard_exprt &g2)
   for(exprt::operandst::const_iterator it2 = op2.begin(); it2 != op2.end();
       ++it2)
   {
-    while(it1 != op1.end() && *it1 < *it2)
+    while(it1 != op1.end() && irept::lesst{}(*it1, *it2))
       ++it1;
     if(it1 != op1.end() && *it1 == *it2)
       it1 = op1.erase(it1);
@@ -141,7 +141,7 @@ guard_exprt &operator|=(guard_exprt &g1, const guard_exprt &g2)
   for(exprt::operandst::const_iterator it2 = op2.begin(); it2 != op2.end();
       ++it2)
   {
-    while(it1 != op1.end() && *it1 < *it2)
+    while(it1 != op1.end() && irept::lesst{}(*it1, *it2))
     {
       n_op1.push_back(*it1);
       it1 = op1.erase(it1);

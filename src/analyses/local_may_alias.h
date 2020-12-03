@@ -46,7 +46,7 @@ public:
   local_cfgt cfg;
 
   // given a pointer, returns possible aliases
-  std::set<exprt> get(
+  std::set<exprt, irept::lesst> get(
     const goto_programt::const_targett t,
     const exprt &src) const;
 

@@ -239,7 +239,7 @@ protected:
     const guardt &guard);
 
   goto_programt new_code;
-  typedef std::set<exprt> assertionst;
+  typedef std::set<exprt, irept::lesst> assertionst;
   assertionst assertions;
 
   /// Remove all assertions containing the symbol in \p lhs as well as all

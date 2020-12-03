@@ -28,7 +28,7 @@ void cover_decision_instrumentert::instrument(
   // Decisions are maximal Boolean combinations of conditions.
   if(!i_it->source_location.is_built_in())
   {
-    const std::set<exprt> decisions = collect_decisions(i_it);
+    const std::set<exprt, irept::lesst> decisions = collect_decisions(i_it);
 
     const source_locationt source_location = i_it->source_location;
 

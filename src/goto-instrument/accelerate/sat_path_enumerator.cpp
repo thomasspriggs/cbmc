@@ -212,7 +212,7 @@ void sat_path_enumeratort::build_path(
 void sat_path_enumeratort::build_fixed()
 {
   scratch_programt scratch{symbol_table, message_handler, guard_manager};
-  std::map<exprt, exprt> shadow_distinguishers;
+  std::map<exprt, exprt, irept::lesst> shadow_distinguishers;
 
   fixed.copy_from(goto_program);
 

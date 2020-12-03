@@ -177,7 +177,7 @@ protected:
 
   local_may_alias_factoryt local_may_alias_factory;
 
-  std::set<exprt> aliases(const exprt &, locationt loc);
+  std::set<exprt, irept::lesst> aliases(const exprt &, locationt loc);
 };
 
 #endif // CPROVER_ANALYSES_CUSTOM_BITVECTOR_ANALYSIS_H

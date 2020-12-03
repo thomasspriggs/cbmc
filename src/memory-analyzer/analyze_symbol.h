@@ -87,7 +87,7 @@ private:
 
   /// Mapping pointer expression for which \ref get_non_char_pointer_value
   ///   returned nil expression to memory location (from \ref gdb_apit).
-  std::map<exprt, memory_addresst> outstanding_assignments;
+  std::map<exprt, memory_addresst, irept::lesst> outstanding_assignments;
 
   /// Storing pairs <address, symbol> such that at `address` is stored the
   ///   value of `symbol`.

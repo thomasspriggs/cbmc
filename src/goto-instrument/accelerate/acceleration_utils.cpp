@@ -111,7 +111,7 @@ void acceleration_utilst::find_modified(
 }
 
 bool acceleration_utilst::check_inductive(
-  std::map<exprt, polynomialt> polynomials,
+  std::map<exprt, polynomialt, irept::lesst> polynomials,
   patht &path,
   guard_managert &guard_manager)
 {
@@ -189,7 +189,7 @@ bool acceleration_utilst::check_inductive(
 
 void acceleration_utilst::stash_polynomials(
   scratch_programt &program,
-  std::map<exprt, polynomialt> &polynomials,
+  std::map<exprt, polynomialt, irept::lesst> &polynomials,
   substitutiont &substitution,
   patht &path)
 {
@@ -342,7 +342,7 @@ void acceleration_utilst::push_nondet(exprt &expr)
 }
 
 bool acceleration_utilst::do_assumptions(
-  std::map<exprt, polynomialt> polynomials,
+  std::map<exprt, polynomialt, irept::lesst> polynomials,
   patht &path,
   exprt &guard,
   guard_managert &guard_manager)
@@ -867,7 +867,7 @@ bool acceleration_utilst::expr2poly(
 
 bool acceleration_utilst::do_nonrecursive(
   goto_programt::instructionst &body,
-  std::map<exprt, polynomialt> &polynomials,
+  std::map<exprt, polynomialt, irept::lesst> &polynomials,
   substitutiont &substitution,
   expr_sett &nonrecursive,
   scratch_programt &program)
@@ -1222,7 +1222,7 @@ void acceleration_utilst::extract_polynomial(
     expr_listt terms=it->first;
     exprt coefficient=it->second;
     constant_exprt concrete_term=to_constant_expr(program.eval(coefficient));
-    std::map<exprt, int> degrees;
+    std::map<exprt, int, irept::lesst> degrees;
 
     mp_integer mp=binary2integer(concrete_term.get_value().c_str(), true);
     monomial.coeff = numeric_cast_v<int>(mp);

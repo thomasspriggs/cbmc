@@ -43,7 +43,7 @@ protected:
   function_modifiest &function_modifies;
   natural_loops_mutablet natural_loops;
 
-  typedef std::set<exprt> modifiest;
+  typedef std::set<exprt, irept::lesst> modifiest;
   typedef const natural_loops_mutablet::natural_loopt loopt;
 
   void havoc_loops();

@@ -175,9 +175,11 @@ private:
       return a->location_number < b->location_number;
     }
   };
-  typedef std::
-    map<goto_programt::const_targett, std::set<exprt>, dependency_ordert>
-      data_depst;
+  typedef std::map<
+    goto_programt::const_targett,
+    std::set<exprt, irept::lesst>,
+    dependency_ordert>
+    data_depst;
   data_depst domain_data_deps;
 
   typedef std::map<goto_programt::const_targett, tvt> control_depst;

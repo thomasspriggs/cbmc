@@ -24,7 +24,7 @@ Author: Daniel Kroening
 void collect_mcdc_controlling_rec(
   const exprt &src,
   const std::vector<exprt> &conditions,
-  std::set<exprt> &result)
+  std::set<exprt, irept::lesst> &result)
 {
   // src is conjunction (ID_and) or disjunction (ID_or)
   if(src.id() == ID_and || src.id() == ID_or)
@@ -128,9 +128,9 @@ void collect_mcdc_controlling_rec(
   }
 }
 
-std::set<exprt> collect_mcdc_controlling(const std::set<exprt> &decisions)
+std::set<exprt, irept::lesst> collect_mcdc_controlling(const std::set<exprt, irept::lesst> &decisions)
 {
-  std::set<exprt> result;
+  std::set<exprt, irept::lesst> result;
 
   for(const auto &d : decisions)
     collect_mcdc_controlling_rec(d, {}, result);
@@ -140,12 +140,12 @@ std::set<exprt> collect_mcdc_controlling(const std::set<exprt> &decisions)
 
 /// To replace the i-th expr of ''operands'' with each expr inside
 /// ''replacement_exprs''.
-std::set<exprt> replacement_conjunction(
-  const std::set<exprt> &replacement_exprs,
+std::set<exprt, irept::lesst> replacement_conjunction(
+  const std::set<exprt, irept::lesst> &replacement_exprs,
   const std::vector<exprt> &operands,
   const std::size_t i)
 {
-  std::set<exprt> result;
+  std::set<exprt, irept::lesst> result;
   for(auto &y : replacement_exprs)
   {
     std::vector<exprt> others;
@@ -162,18 +162,18 @@ std::set<exprt> replacement_conjunction(
 
 /// This nested method iteratively applies ''collect_mcdc_controlling'' to every
 /// non-atomic expr within a decision
-std::set<exprt>
-collect_mcdc_controlling_nested(const std::set<exprt> &decisions)
+std::set<exprt, irept::lesst>
+collect_mcdc_controlling_nested(const std::set<exprt, irept::lesst> &decisions)
 {
   // To obtain the 1st-level controlling conditions
-  std::set<exprt> controlling = collect_mcdc_controlling(decisions);
+  std::set<exprt, irept::lesst> controlling = collect_mcdc_controlling(decisions);
 
-  std::set<exprt> result;
+  std::set<exprt, irept::lesst> result;
   // For each controlling condition, to check if it contains
   // non-atomic exprs
   for(auto &src : controlling)
   {
-    std::set<exprt> s1, s2;
+    std::set<exprt, irept::lesst> s1, s2;
 
     // The final controlling conditions resulted from ''src''
     // will be stored in ''s1''; ''s2'' is usd to hold the
@@ -202,7 +202,7 @@ collect_mcdc_controlling_nested(const std::set<exprt> &decisions)
 
         for(std::size_t i = 0; i < operands.size(); i++)
         {
-          std::set<exprt> res;
+          std::set<exprt, irept::lesst> res;
           // To expand an operand if it is not atomic,
           // and label the ''changed'' flag; the resulted
           // expansion of such an operand is stored in ''res''.
@@ -212,21 +212,19 @@ collect_mcdc_controlling_nested(const std::set<exprt> &decisions)
             if(!is_condition(no))
             {
               changed = true;
-              std::set<exprt> ctrl_no;
-              ctrl_no.insert(no);
-              res = collect_mcdc_controlling(ctrl_no);
+              res = collect_mcdc_controlling({no});
             }
           }
           else if(!is_condition(operands[i]))
           {
             changed = true;
-            std::set<exprt> ctrl;
+            std::set<exprt, irept::lesst> ctrl;
             ctrl.insert(operands[i]);
             res = collect_mcdc_controlling(ctrl);
           }
 
           // To replace a non-atomic expr with its expansion
-          std::set<exprt> co = replacement_conjunction(res, operands, i);
+          std::set<exprt, irept::lesst> co = replacement_conjunction(res, operands, i);
           s2.insert(co.begin(), co.end());
           if(!res.empty())
             break;
@@ -309,18 +307,18 @@ std::set<signed> sign_of_expr(const exprt &e, const exprt &E)
 /// After the ''collect_mcdc_controlling_nested'', there can be the recurrence
 /// of the same expr in the resulted set of exprs, and this method will remove
 /// the repetitive ones.
-void remove_repetition(std::set<exprt> &exprs)
+void remove_repetition(std::set<exprt, irept::lesst> &exprs)
 {
   // to obtain the set of atomic conditions
-  std::set<exprt> conditions;
+  std::set<exprt, irept::lesst> conditions;
   for(auto &x : exprs)
   {
-    std::set<exprt> new_conditions = collect_conditions(x);
+    std::set<exprt, irept::lesst> new_conditions = collect_conditions(x);
     conditions.insert(new_conditions.begin(), new_conditions.end());
   }
   // exprt that contains multiple (inconsistent) signs should
   // be removed
-  std::set<exprt> new_exprs;
+  std::set<exprt, irept::lesst> new_exprs;
   for(auto &x : exprs)
   {
     bool kept = true;
@@ -392,7 +390,9 @@ void remove_repetition(std::set<exprt> &exprs)
 }
 
 /// To evaluate the value of expr ''src'', according to the atomic expr values
-bool eval_expr(const std::map<exprt, signed> &atomic_exprs, const exprt &src)
+bool eval_expr(
+  const std::map<exprt, signed, irept::lesst> &atomic_exprs,
+  const exprt &src)
 {
   std::vector<exprt> operands;
   collect_operands(src, operands);
@@ -435,10 +435,10 @@ bool eval_expr(const std::map<exprt, signed> &atomic_exprs, const exprt &src)
 }
 
 /// To obtain values of atomic exprs within the super expr
-std::map<exprt, signed>
-values_of_atomic_exprs(const exprt &e, const std::set<exprt> &conditions)
+std::map<exprt, signed, irept::lesst>
+values_of_atomic_exprs(const exprt &e, const std::set<exprt, irept::lesst> &conditions)
 {
-  std::map<exprt, signed> atomic_exprs;
+  std::map<exprt, signed, irept::lesst> atomic_exprs;
   for(auto &c : conditions)
   {
     std::set<signed> signs = sign_of_expr(c, e);
@@ -465,7 +465,7 @@ bool is_mcdc_pair(
   const exprt &e1,
   const exprt &e2,
   const exprt &c,
-  const std::set<exprt> &conditions,
+  const std::set<exprt, irept::lesst> &conditions,
   const exprt &decision)
 {
   // An controlling expr cannot be mcdc pair of itself
@@ -474,9 +474,9 @@ bool is_mcdc_pair(
 
   // To obtain values of each atomic condition within ''e1''
   // and ''e2''
-  std::map<exprt, signed> atomic_exprs_e1 =
+  std::map<exprt, signed, irept::lesst> atomic_exprs_e1 =
     values_of_atomic_exprs(e1, conditions);
-  std::map<exprt, signed> atomic_exprs_e2 =
+  std::map<exprt, signed, irept::lesst> atomic_exprs_e2 =
     values_of_atomic_exprs(e2, conditions);
 
   // the sign of ''c'' inside ''e1'' and ''e2''
@@ -524,8 +524,8 @@ bool is_mcdc_pair(
 /// the atomic expr ''c''
 bool has_mcdc_pair(
   const exprt &c,
-  const std::set<exprt> &expr_set,
-  const std::set<exprt> &conditions,
+  const std::set<exprt, irept::lesst> &expr_set,
+  const std::set<exprt, irept::lesst> &conditions,
   const exprt &decision)
 {
   for(const auto &y1 : expr_set)
@@ -548,20 +548,20 @@ bool has_mcdc_pair(
 /// ''collect_mcdc_controlling_nested'' and
 /// ''remove_repetition''
 void minimize_mcdc_controlling(
-  std::set<exprt> &controlling,
+  std::set<exprt, irept::lesst> &controlling,
   const exprt &decision)
 {
   // to obtain the set of atomic conditions
-  std::set<exprt> conditions;
+  std::set<exprt, irept::lesst> conditions;
   for(auto &x : controlling)
   {
-    std::set<exprt> new_conditions = collect_conditions(x);
+    std::set<exprt, irept::lesst> new_conditions = collect_conditions(x);
     conditions.insert(new_conditions.begin(), new_conditions.end());
   }
 
   while(true)
   {
-    std::set<exprt> new_controlling;
+    std::set<exprt, irept::lesst> new_controlling;
     bool ctrl_update = false;
     // Iteratively, we test that after removing an item ''x''
     // from the ''controlling'', can a complete mcdc coverage
@@ -636,16 +636,16 @@ void cover_mcdc_instrumentert::instrument(
   //    affect the outcome of the decision.
   if(!i_it->source_location.is_built_in())
   {
-    const std::set<exprt> conditions = collect_conditions(i_it);
-    const std::set<exprt> decisions = collect_decisions(i_it);
+    const std::set<exprt, irept::lesst> conditions = collect_conditions(i_it);
+    const std::set<exprt, irept::lesst> decisions = collect_decisions(i_it);
 
-    std::set<exprt> both;
+    std::set<exprt, irept::lesst> both;
     std::set_union(
       conditions.begin(),
       conditions.end(),
       decisions.begin(),
       decisions.end(),
-      inserter(both, both.end()));
+      inserter(both, both.end()), irept::lesst{});
 
     const source_locationt source_location = i_it->source_location;
 
@@ -677,7 +677,7 @@ void cover_mcdc_instrumentert::instrument(
       i_it->source_location.set_function(function_id);
     }
 
-    std::set<exprt> controlling;
+    std::set<exprt, irept::lesst> controlling;
     controlling = collect_mcdc_controlling_nested(decisions);
     remove_repetition(controlling);
     // for now, we restrict to the case of a single ''decision'';
