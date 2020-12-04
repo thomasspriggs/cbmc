@@ -44,7 +44,7 @@ struct datat
 
   bool operator<(const datat &d2) const
   {
-    return id<d2.id || (id==d2.id && loc<d2.loc);
+    return id < d2.id || (id == d2.id && loc.compare(d2.loc));
   }
 };
 
