@@ -71,8 +71,8 @@ protected:
 
   void assert_for_values(
     scratch_programt &program,
-    std::map<exprt, exprt> &values,
-    std::set<std::pair<expr_listt, exprt> > &coefficients,
+    std::map<exprt, exprt, irept::lesst> &values,
+    coefficientst &coefficients,
     int num_unwindings,
     goto_programt &loop_body,
     exprt &target);
@@ -96,7 +96,7 @@ protected:
   goto_programt::targett loop_header;
 
   typedef std::map<goto_programt::targett, exprt> distinguish_mapt;
-  typedef std::map<exprt, bool> distinguish_valuest;
+  typedef std::map<exprt, bool, irept::lesst> distinguish_valuest;
 
   acceleration_utilst utils;
   exprt loop_counter;

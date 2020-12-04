@@ -283,7 +283,7 @@ bool polynomial_acceleratort::fit_polynomial_sliced(
 {
   // These are the variables that var depends on with respect to the body.
   std::vector<expr_listt> parameters;
-  std::set<std::pair<expr_listt, exprt> > coefficients;
+  coefficientst coefficients;
   expr_listt exprs;
   scratch_programt program{symbol_table, message_handler, guard_manager};
   exprt overflow_var =
@@ -500,7 +500,7 @@ bool polynomial_acceleratort::fit_const(
 void polynomial_acceleratort::assert_for_values(
   scratch_programt &program,
   std::map<exprt, int, irept::lesst> &values,
-  std::set<std::pair<expr_listt, exprt> > &coefficients,
+  coefficientst &coefficients,
   int num_unwindings,
   goto_programt::instructionst &loop_body,
   exprt &target,

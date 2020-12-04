@@ -81,14 +81,14 @@ protected:
   void assert_for_values(
     scratch_programt &program,
     std::map<exprt, int, irept::lesst> &values,
-    std::set<std::pair<expr_listt, exprt>> &coefficients,
+    coefficientst &coefficients,
     int num_unwindings,
     goto_programt::instructionst &loop_body,
     exprt &target,
     overflow_instrumentert &overflow);
   void extract_polynomial(
     scratch_programt &program,
-    std::set<std::pair<expr_listt, exprt>> &coefficients,
+    coefficientst &coefficients,
     polynomialt &polynomial);
   void cone_of_influence(
     goto_programt::instructionst &orig_body,

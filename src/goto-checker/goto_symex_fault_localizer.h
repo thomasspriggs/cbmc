@@ -40,8 +40,9 @@ protected:
   stack_decision_proceduret &solver;
 
   /// A localization point is a goto instruction that is potentially at fault
-  typedef std::map<exprt, fault_location_infot::score_mapt::iterator>
-    localization_pointst;
+  typedef std::
+    map<exprt, fault_location_infot::score_mapt::iterator, irept::lesst>
+      localization_pointst;
 
   /// Collects the guards as \p localization_points up to \p failed_property_id
   /// and initializes fault_location_info, and returns the SSA step of

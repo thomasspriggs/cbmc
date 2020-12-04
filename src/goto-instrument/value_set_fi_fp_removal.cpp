@@ -89,7 +89,7 @@ void fix_return_type(
 void remove_function_pointer(
   goto_programt &goto_program,
   goto_programt::targett target,
-  const std::set<symbol_exprt> &functions,
+  const std::set<symbol_exprt, irept::lesst> &functions,
   goto_modelt &goto_model)
 {
   const code_function_callt &code = to_code_function_call(target->code);
@@ -213,7 +213,7 @@ void value_set_fi_fp_removal(
           const auto &pointer = to_dereference_expr(call.function()).pointer();
           auto addresses = value_sets.get_values(f.first, target, pointer);
 
-          std::set<symbol_exprt> functions;
+          std::set<symbol_exprt, irept::lesst> functions;
 
           for(const auto &address : addresses)
           {

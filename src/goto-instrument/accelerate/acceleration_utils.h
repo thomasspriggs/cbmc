@@ -18,6 +18,8 @@ Author: Matt Lewis
 
 #include <util/symbol_table.h>
 #include <util/message.h>
+#include <util/lexicographical_less.h>
+#include <util/pair_less.h>
 
 #include <goto-programs/goto_program.h>
 #include <goto-programs/goto_functions.h>
@@ -32,6 +34,9 @@ Author: Matt Lewis
 
 typedef std::unordered_map<exprt, exprt, irep_hash> expr_mapt;
 typedef std::list<exprt> expr_listt;
+using coefficientst = std::set<
+  std::pair<expr_listt, exprt>,
+  pair_lesst<lexicographical_lesst<irept::lesst>, irept::lesst>>;
 
 class acceleration_utilst
 {
@@ -66,7 +71,7 @@ public:
 
   void extract_polynomial(
     scratch_programt &program,
-    std::set<std::pair<expr_listt, exprt>> &coefficients,
+    coefficientst &coefficients,
     polynomialt &polynomial);
 
   bool check_inductive(
@@ -105,7 +110,7 @@ public:
     polynomial_array_assignmentst;
 
   bool do_arrays(goto_programt::instructionst &loop_body,
-                 std::map<exprt, polynomialt> &polynomials,
+                 std::map<exprt, polynomialt, irept::lesst> &polynomials,
                  substitutiont &substitution,
                  scratch_programt &program);
   expr_pairst gather_array_assignments(
@@ -113,12 +118,12 @@ public:
     expr_sett &arrays_written);
   bool array_assignments2polys(
     expr_pairst &array_assignments,
-    std::map<exprt, polynomialt> &polynomials,
+    std::map<exprt, polynomialt, irept::lesst> &polynomials,
     polynomial_array_assignmentst &array_polynomials,
     polynomialst &nondet_indices);
   bool expr2poly(
     exprt &expr,
-    std::map<exprt, polynomialt> &polynomials,
+    std::map<exprt, polynomialt, irept::lesst> &polynomials,
     polynomialt &poly);
 
   bool do_nonrecursive(
