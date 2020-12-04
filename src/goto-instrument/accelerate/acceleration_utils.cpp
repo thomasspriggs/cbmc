@@ -543,7 +543,7 @@ acceleration_utilst::expr_pairst acceleration_utilst::gather_array_assignments(
 
 bool acceleration_utilst::do_arrays(
   goto_programt::instructionst &loop_body,
-  std::map<exprt, polynomialt> &polynomials,
+  std::map<exprt, polynomialt, irept::lesst> &polynomials,
   substitutiont &substitution,
   scratch_programt &program)
 {
@@ -778,7 +778,7 @@ bool acceleration_utilst::do_arrays(
 
 bool acceleration_utilst::array_assignments2polys(
   expr_pairst &array_assignments,
-  std::map<exprt, polynomialt> &polynomials,
+  std::map<exprt, polynomialt, irept::lesst> &polynomials,
   polynomial_array_assignmentst &array_polynomials,
   polynomialst &nondet_indices)
 {
@@ -837,7 +837,7 @@ bool acceleration_utilst::array_assignments2polys(
 
 bool acceleration_utilst::expr2poly(
   exprt &expr,
-  std::map<exprt, polynomialt> &polynomials,
+  std::map<exprt, polynomialt, irept::lesst> &polynomials,
   polynomialt &poly)
 {
   exprt subbed_expr=expr;
@@ -1211,7 +1211,7 @@ void acceleration_utilst::gather_array_accesses(
 
 void acceleration_utilst::extract_polynomial(
   scratch_programt &program,
-  std::set<std::pair<expr_listt, exprt> > &coefficients,
+  coefficientst &coefficients,
   polynomialt &polynomial)
 {
   for(std::set<std::pair<expr_listt, exprt> >::iterator it=coefficients.begin();

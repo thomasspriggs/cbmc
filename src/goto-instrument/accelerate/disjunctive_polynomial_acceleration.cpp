@@ -404,7 +404,7 @@ bool disjunctive_polynomial_accelerationt::fit_polynomial(
 {
   // These are the variables that var depends on with respect to the body.
   std::vector<expr_listt> parameters;
-  std::set<std::pair<expr_listt, exprt> > coefficients;
+  coefficientst coefficients;
   expr_listt exprs;
   scratch_programt program{symbol_table, message_handler, guard_manager};
   expr_sett influence;
@@ -483,9 +483,9 @@ bool disjunctive_polynomial_accelerationt::fit_polynomial(
   // Build a set of values for all the parameters that allow us to fit a
   // unique polynomial.
 
-  std::map<exprt, exprt> ivals1;
-  std::map<exprt, exprt> ivals2;
-  std::map<exprt, exprt> ivals3;
+  std::map<exprt, exprt, irept::lesst> ivals1;
+  std::map<exprt, exprt, irept::lesst> ivals2;
+  std::map<exprt, exprt, irept::lesst> ivals3;
 
   for(expr_sett::iterator it=influence.begin();
       it!=influence.end();
@@ -536,7 +536,7 @@ bool disjunctive_polynomial_accelerationt::fit_polynomial(
     // ivals1[*it]=from_integer(1, it->type());
   }
 
-  std::map<exprt, exprt> values;
+  std::map<exprt, exprt, irept::lesst> values;
 
   for(expr_sett::iterator it=influence.begin();
       it!=influence.end();
@@ -647,8 +647,8 @@ bool disjunctive_polynomial_accelerationt::fit_polynomial(
 
 void disjunctive_polynomial_accelerationt::assert_for_values(
   scratch_programt &program,
-  std::map<exprt, exprt> &values,
-  std::set<std::pair<expr_listt, exprt> > &coefficients,
+  std::map<exprt, exprt, irept::lesst> &values,
+  coefficientst &coefficients,
   int num_unwindings,
   goto_programt &loop_body,
   exprt &target)
@@ -854,7 +854,7 @@ void disjunctive_polynomial_accelerationt::build_path(
 void disjunctive_polynomial_accelerationt::build_fixed()
 {
   scratch_programt scratch{symbol_table, message_handler, guard_manager};
-  std::map<exprt, exprt> shadow_distinguishers;
+  std::map<exprt, exprt, irept::lesst> shadow_distinguishers;
 
   fixed.copy_from(goto_program);
 
