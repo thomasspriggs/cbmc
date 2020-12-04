@@ -2,8 +2,8 @@
 // Created by tspriggs on 03/12/2020.
 //
 
-#ifndef CPROVER_UTIL_PAIR_COMPARISON_H
-#define CPROVER_UTIL_PAIR_COMPARISON_H
+#ifndef CPROVER_UTIL_PAIR_LESS_H
+#define CPROVER_UTIL_PAIR_LESS_H
 
 template<typename less1t, typename less2t>
 struct pair_lesst
@@ -22,4 +22,4 @@ struct pair_lesst
   }
 };
 
-#endif // CPROVER_UTIL_PAIR_COMPARISON_H
+#endif // CPROVER_UTIL_PAIR_LESS_H
