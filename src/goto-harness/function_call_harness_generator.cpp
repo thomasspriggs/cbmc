@@ -58,7 +58,7 @@ struct function_call_harness_generatort::implt
   std::map<irep_idt, irep_idt> function_argument_to_associated_array_size;
   std::map<irep_idt, irep_idt> function_parameter_to_associated_array_size;
 
-  std::set<symbol_exprt> global_pointers;
+  std::set<symbol_exprt, irept::lesst> global_pointers;
 
   /// \see goto_harness_generatort::generate
   void generate(goto_modelt &goto_model, const irep_idt &harness_function_name);

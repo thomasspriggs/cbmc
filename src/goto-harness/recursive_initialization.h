@@ -71,11 +71,16 @@ public:
     bool has_size_parameter;
     bool operator<(const constructor_keyt &other) const
     {
-      return std::tie(constructor_type, is_nullable, has_size_parameter) <
-             std::tie(
-               other.constructor_type,
-               other.is_nullable,
-               other.has_size_parameter);
+      const auto comparison = constructor_type.compare(other.constructor_type);
+      if(comparison == 0)
+      {
+        return std::tie(is_nullable, has_size_parameter) <
+               std::tie(other.is_nullable, other.has_size_parameter);
+      }
+      else
+      {
+        return comparison < 0;
+      }
     };
     bool operator==(const constructor_keyt &other) const
     {
