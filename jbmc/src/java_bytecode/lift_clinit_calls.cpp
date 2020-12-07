@@ -47,7 +47,10 @@ codet lift_clinit_calls(codet input)
     return input;
 
   // 2. Unique, such that each clinit method is only called once:
-  std::sort(clinit_wrappers_called.begin(), clinit_wrappers_called.end());
+  std::sort(
+    clinit_wrappers_called.begin(),
+    clinit_wrappers_called.end(),
+    irept::lesst{});
   auto delete_after =
     std::unique(clinit_wrappers_called.begin(), clinit_wrappers_called.end());
   clinit_wrappers_called.erase(delete_after, clinit_wrappers_called.end());

@@ -805,7 +805,7 @@ code_blockt get_user_specified_clinit_body(
   if(class_entry != static_values_json.end() && class_entry->second.is_object())
   {
     const auto &class_json_object = to_json_object(class_entry->second);
-    std::map<symbol_exprt, jsont> static_field_values;
+    std::map<symbol_exprt, jsont, irept::lesst> static_field_values;
     for(const auto &symbol_pair :
         equal_range(class_to_declared_symbols_map, class_id))
     {
