@@ -286,8 +286,8 @@ SCENARIO("irept_memory", "[core][utils][irept]")
       irep1.id("id1");
       irep2.id("id2");
       REQUIRE(irep1 != irep2);
-      const bool one_lt_two = irep1 < irep2;
-      const bool two_lt_one = irep2 < irep1;
+      const bool one_lt_two = irep1.ordering(irep2);
+      const bool two_lt_one = irep2.ordering(irep1);
       REQUIRE(one_lt_two != two_lt_one);
       REQUIRE(irep1.ordering(irep2) != irep2.ordering(irep1));
       REQUIRE(irep1.compare(irep2) != 0);
