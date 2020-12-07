@@ -166,10 +166,10 @@ public:
 protected:
   typedef std::vector<variablet> variablest;
   expanding_vectort<variablest> variables;
-  std::set<symbol_exprt> used_local_names;
+  std::set<symbol_exprt, irept::lesst> used_local_names;
   bool method_has_this;
-  std::map<irep_idt, bool> class_has_clinit_method;
-  std::map<irep_idt, bool> any_superclass_has_clinit_method;
+  std::map<irep_idt, bool, irept::lesst> class_has_clinit_method;
+  std::map<irep_idt, bool, irept::lesst> any_superclass_has_clinit_method;
   const class_hierarchyt &class_hierarchy;
 
   enum instruction_sizet

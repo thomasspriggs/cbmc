@@ -104,12 +104,12 @@ refined_string_exprt make_refined_string_exprt(
 /// \param [in] s: `string_exprt` to create index set for
 /// \param array_pool: pool of arrays representing strings
 /// \return the corresponding index set
-std::set<exprt>
+std::set<exprt, irept::lesst>
 full_index_set(const array_string_exprt &s, array_poolt &array_pool)
 {
   const mp_integer n = numeric_cast_v<mp_integer>(
     to_constant_expr(to_array_type(s.type()).size()));
-  std::set<exprt> ret;
+  std::set<exprt, irept::lesst> ret;
   for(mp_integer i = 0; i < n; ++i)
     ret.insert(from_integer(i));
   return ret;
@@ -117,9 +117,10 @@ full_index_set(const array_string_exprt &s, array_poolt &array_pool)
 
 /// Create the cartesian product of two sets.
 template <class X, class Y>
-std::set<std::pair<X, Y>> product(const std::set<X> xs, const std::set<Y> ys)
+std::set<std::pair<X, Y>, pair_lesst<irept::lesst, irept::lesst>>
+product(const std::set<X, irept::lesst> xs, const std::set<Y, irept::lesst> ys)
 {
-  std::set<std::pair<X, Y>> s;
+  decltype(product(xs, ys)) s;
   for(const auto &x : xs)
     for(const auto &y : ys)
       s.insert(std::pair<X, Y>(x, y));
@@ -260,8 +261,8 @@ SCENARIO(
     WHEN("we instantiate and simplify")
     {
       // Making index sets
-      const std::set<exprt> index_set_ab = full_index_set(ab_array, array_pool);
-      const std::set<exprt> index_set_b = full_index_set(b_array, array_pool);
+      const std::set<exprt, irept::lesst> index_set_ab = full_index_set(ab_array, array_pool);
+      const std::set<exprt, irept::lesst> index_set_b = full_index_set(b_array, array_pool);
 
       // List of new lemmas to be returned
       std::vector<exprt> lemmas;
@@ -318,7 +319,8 @@ SCENARIO(
     WHEN("we instantiate and simplify")
     {
       // Making index sets
-      const std::set<exprt> index_set_a = full_index_set(a_array, array_pool);
+      const std::set<exprt, irept::lesst> index_set_a =
+        full_index_set(a_array, array_pool);
 
       // Instantiate the lemmas
       std::vector<exprt> lemmas = instantiate_not_contains(
@@ -368,8 +370,8 @@ SCENARIO(
     WHEN("we instantiate and simplify")
     {
       // Making index sets
-      const std::set<exprt> index_set_a = full_index_set(a_array, array_pool);
-      const std::set<exprt> index_set_b = full_index_set(b_array, array_pool);
+      const std::set<exprt, irept::lesst> index_set_a = full_index_set(a_array, array_pool);
+      const std::set<exprt, irept::lesst> index_set_b = full_index_set(b_array, array_pool);
 
       // Instantiate the lemmas
       std::vector<exprt> lemmas = instantiate_not_contains(
@@ -419,8 +421,8 @@ SCENARIO(
     WHEN("we instantiate and simplify")
     {
       // Making index sets
-      const std::set<exprt> index_set_a = full_index_set(a_array, array_pool);
-      const std::set<exprt> index_set_empty = {
+      const std::set<exprt, irept::lesst> index_set_a = full_index_set(a_array, array_pool);
+      const std::set<exprt, irept::lesst> index_set_empty = {
         generator.fresh_symbol("z", t.length_type())};
 
       // Instantiate the lemmas
@@ -472,7 +474,7 @@ SCENARIO(
     WHEN("we instantiate and simplify")
     {
       // Making index sets
-      const std::set<exprt> index_set_ab = full_index_set(ab_array, array_pool);
+      const std::set<exprt, irept::lesst> index_set_ab = full_index_set(ab_array, array_pool);
 
       // Instantiate the lemmas
       std::vector<exprt> lemmas = instantiate_not_contains(
@@ -523,8 +525,8 @@ SCENARIO(
     WHEN("we instantiate and simplify")
     {
       // Making index sets
-      const std::set<exprt> index_set_ab = full_index_set(ab_array, array_pool);
-      const std::set<exprt> index_set_cd = full_index_set(cd_array, array_pool);
+      const std::set<exprt, irept::lesst> index_set_ab = full_index_set(ab_array, array_pool);
+      const std::set<exprt, irept::lesst> index_set_cd = full_index_set(cd_array, array_pool);
 
       // Instantiate the lemmas
       std::vector<exprt> lemmas = instantiate_not_contains(
