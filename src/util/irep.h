@@ -500,6 +500,17 @@ public:
   static std::size_t number_of_non_comments(const named_subt &);
 };
 
+// NOLINTNEXTLINE [allow specialisation within 'std']
+namespace std
+{
+  template <>
+  struct less<irept>
+  {
+    // operator() is deliberately left unimplemented, in order to force explicit
+    // use of irept::lesst, in the case where that is the desired ordering.
+  };
+} // namespace std
+
 // NOLINTNEXTLINE(readability/identifiers)
 struct irep_hash
 {
