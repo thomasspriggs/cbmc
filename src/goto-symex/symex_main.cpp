@@ -666,10 +666,10 @@ void goto_symext::execute_next_instruction(
     break;
 
   case ASSIGN:
-    state.dereference_cache.clear();
     if(state.reachable)
     {
         symex_assign(state, instruction.get_assign());
+        // state.dereference_cache.clear();
     }
     symex_transition(state);
     break;
