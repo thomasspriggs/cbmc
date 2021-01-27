@@ -668,8 +668,8 @@ void goto_symext::execute_next_instruction(
   case ASSIGN:
     if(state.reachable)
     {
-        symex_assign(state, instruction.get_assign());
-        // state.dereference_cache.clear();
+      symex_assign(state, instruction.get_assign());
+      // state.dereference_cache.clear();
     }
     symex_transition(state);
     break;
