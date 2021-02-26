@@ -686,6 +686,8 @@ void goto_symext::merge_goto(
 
       // adjust depth
       state.depth = std::min(state.depth, goto_state.depth);
+
+      state.dereference_cache.merge(goto_state.dereference_cache);
     }
   }
 

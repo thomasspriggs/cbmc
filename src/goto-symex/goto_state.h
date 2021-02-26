@@ -37,6 +37,7 @@ public:
   void evict(const exprt &cached_pointer_expr);
   void clear();
   void debug_dump() const;
+  void merge(const dereference_cachet & source);
 };
 
 /// Container for data that varies per program point, e.g. the constant

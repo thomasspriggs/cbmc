@@ -56,6 +56,11 @@ void dereference_cachet::clear()
 //   cache.clear();
 }
 
+void dereference_cachet::merge(const dereference_cachet &source)
+{
+  this->cache.insert(source.cache.begin(), source.cache.end());
+}
+
 /// Print the constant propagation map in a human-friendly format.
 /// This is primarily for use from the debugger; please don't delete me just
 /// because there aren't any current callers.
