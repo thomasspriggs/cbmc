@@ -44,6 +44,7 @@ Date: August 2012
 
 #include "invariant.h"
 #include "signal_catcher.h"
+#include "string_utils.h"
 
 int run(const std::string &what, const std::vector<std::string> &argv)
 {
@@ -368,11 +369,7 @@ int run(
       remove_signal_catcher();
       sigprocmask(SIG_SETMASK, &old_mask, nullptr);
 
-      std::vector<char *> _argv(argv.size()+1);
-      for(std::size_t i=0; i<argv.size(); i++)
-        _argv[i]=strdup(argv[i].c_str());
-
-      _argv[argv.size()]=nullptr;
+      const auto _argv = make_vector_of_c_strings(argv);
 
       if(stdin_fd!=STDIN_FILENO)
         dup2(stdin_fd, STDIN_FILENO);

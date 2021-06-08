@@ -146,4 +146,12 @@ std::string wrap_line(
   const std::size_t left_margin = 0,
   const std::size_t width = 80);
 
+/// \brief Makes a vector of pointers, which point to C strings copied from a
+///   vector of std::strings.
+/// \warning The pointers returned point to newly allocated memory which should
+///   either be freed with `free`, or cleaned up based on the exiting of the
+///   sub-process which called this function.
+std::vector<char *>
+make_vector_of_c_strings(const std::vector<std::string> &source_strings);
+
 #endif

@@ -12,6 +12,7 @@ Author: Daniel Poetzl
 
 #include <algorithm>
 #include <cctype>
+#include <cstring>
 #include <iomanip>
 
 /// Remove all whitespace characters from either end of a string. Whitespace
@@ -250,5 +251,15 @@ std::string wrap_line(
   result.append(margin);
   result.append(it_line_begin, right);
 
+  return result;
+}
+
+std::vector<char *>
+make_vector_of_c_strings(const std::vector<std::string> &source_strings)
+{
+  std::vector<char *> result(source_strings.size() + 1);
+  for(std::size_t i = 0; i < source_strings.size(); i++)
+    result[i] = strdup(source_strings[i].c_str());
+  result[source_strings.size()] = nullptr;
   return result;
 }
