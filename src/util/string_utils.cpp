@@ -257,9 +257,10 @@ std::string wrap_line(
 std::vector<char *>
 make_vector_of_c_strings(const std::vector<std::string> &source_strings)
 {
-  std::vector<char *> result(source_strings.size() + 1);
-  for(std::size_t i = 0; i < source_strings.size(); i++)
-    result[i] = strdup(source_strings[i].c_str());
-  result[source_strings.size()] = nullptr;
+  std::vector<char *> result;
+  result.reserve(source_strings.size() + 1);
+  for(const std::string &source_string : source_strings)
+    result.push_back(strdup(source_string.c_str()));
+  result.push_back(nullptr);
   return result;
 }
