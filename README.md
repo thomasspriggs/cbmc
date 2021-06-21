@@ -7,9 +7,6 @@
 
 [CProver Documentation](http://cprover.diffblue.com)
 
-Random change to trigger CI.
-
-Another random change to test CI.
 
 About
 =====
