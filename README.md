@@ -11,6 +11,10 @@
 About
 =====
 
+This is a communal branch, to facilitate faster work to resolve some urgent
+issues with the SMT backend.
+
+
 CBMC is a Bounded Model Checker for C and C++ programs. It supports C89, C99,
 most of C11 and most compiler extensions provided by gcc and Visual Studio. It
 also supports SystemC using Scoot. It allows verifying array bounds (buffer
