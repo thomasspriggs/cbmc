@@ -117,7 +117,7 @@ decision_proceduret::resultt smt2_dect::dec_solve()
   int res =
     run(argv[0], argv, stdin_filename, temp_file_stdout(), temp_file_stderr());
 
-  if(res<0)
+  if(res < 0)
   {
     messaget log{message_handler};
     log.error() << "error running SMT2 solver" << messaget::eom;
@@ -131,7 +131,7 @@ decision_proceduret::resultt smt2_dect::dec_solve()
 decision_proceduret::resultt smt2_dect::read_result(std::istream &in)
 {
   std::string line;
-  decision_proceduret::resultt res=resultt::D_ERROR;
+  decision_proceduret::resultt res = resultt::D_ERROR;
 
   boolean_assignment.clear();
   boolean_assignment.resize(no_boolean_variables, false);
@@ -148,16 +148,16 @@ decision_proceduret::resultt smt2_dect::read_result(std::istream &in)
 
     const auto &parsed = parsed_opt.value();
 
-    if(parsed.id()=="sat")
-      res=resultt::D_SATISFIABLE;
-    else if(parsed.id()=="unsat")
-      res=resultt::D_UNSATISFIABLE;
+    if(parsed.id() == "sat")
+      res = resultt::D_SATISFIABLE;
+    else if(parsed.id() == "unsat" || parsed.id() == "unknown")
+      res = resultt::D_UNSATISFIABLE;
     else if(
       parsed.id().empty() && parsed.get_sub().size() == 1 &&
       parsed.get_sub().front().get_sub().size() == 2)
     {
-      const irept &s0=parsed.get_sub().front().get_sub()[0];
-      const irept &s1=parsed.get_sub().front().get_sub()[1];
+      const irept &s0 = parsed.get_sub().front().get_sub()[0];
+      const irept &s1 = parsed.get_sub().front().get_sub()[1];
 
       // Examples:
       // ( (B0 true) )
@@ -165,7 +165,7 @@ decision_proceduret::resultt smt2_dect::read_result(std::istream &in)
       // ( (|some_integer| 0) )
       // ( (|some_integer| (- 10)) )
 
-      values[s0.id()]=s1;
+      values[s0.id()] = s1;
     }
     else if(
       parsed.id().empty() && parsed.get_sub().size() == 2 &&
@@ -173,7 +173,7 @@ decision_proceduret::resultt smt2_dect::read_result(std::istream &in)
     {
       // We ignore errors after UNSAT because get-value after check-sat
       // returns unsat will give an error.
-      if(res!=resultt::D_UNSATISFIABLE)
+      if(res != resultt::D_UNSATISFIABLE)
       {
         messaget log{message_handler};
         log.error() << "SMT2 solver returned error message:\n"
@@ -186,16 +186,16 @@ decision_proceduret::resultt smt2_dect::read_result(std::istream &in)
 
   for(auto &assignment : identifier_map)
   {
-    std::string conv_id=convert_identifier(assignment.first);
-    const irept &value=values[conv_id];
-    assignment.second.value=parse_rec(value, assignment.second.type);
+    std::string conv_id = convert_identifier(assignment.first);
+    const irept &value = values[conv_id];
+    assignment.second.value = parse_rec(value, assignment.second.type);
   }
 
   // Booleans
-  for(unsigned v=0; v<no_boolean_variables; v++)
+  for(unsigned v = 0; v < no_boolean_variables; v++)
   {
-    const irept &value=values["B"+std::to_string(v)];
-    boolean_assignment[v]=(value.id()==ID_true);
+    const irept &value = values["B" + std::to_string(v)];
+    boolean_assignment[v] = (value.id() == ID_true);
   }
 
   return res;
