@@ -34,6 +34,7 @@ std::string smt2_dect::decision_procedure_text() const
 decision_proceduret::resultt smt2_dect::dec_solve()
 {
   ++number_of_solver_calls;
+  write_footer();
 
   temporary_filet temp_file_problem("smt2_dec_problem_", ""),
     temp_file_stdout("smt2_dec_stdout_", ""),
@@ -44,7 +45,6 @@ decision_proceduret::resultt smt2_dect::dec_solve()
     std::ofstream problem_out(
       temp_file_problem(), std::ios_base::out | std::ios_base::trunc);
     problem_out << stringstream.str();
-    write_footer(problem_out);
   }
 
   std::vector<std::string> argv;
