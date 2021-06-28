@@ -34,18 +34,20 @@ std::string smt2_dect::decision_procedure_text() const
 decision_proceduret::resultt smt2_dect::dec_solve()
 {
   ++number_of_solver_calls;
-  write_footer();
 
   temporary_filet temp_file_problem("smt2_dec_problem_", ""),
     temp_file_stdout("smt2_dec_stdout_", ""),
     temp_file_stderr("smt2_dec_stderr_", "");
 
-  {
-    // we write the problem into a file
-    std::ofstream problem_out(
-      temp_file_problem(), std::ios_base::out | std::ios_base::trunc);
-    problem_out << stringstream.str();
-  }
+  const auto write_problem_to_file = [&](std::ofstream problem_out) {
+    cached_output << stringstream.str();
+    stringstream.clear();
+    write_footer();
+    problem_out << cached_output.str() << stringstream.str();
+    stringstream.clear();
+  };
+  write_problem_to_file(std::ofstream(
+    temp_file_problem(), std::ios_base::out | std::ios_base::trunc));
 
   std::vector<std::string> argv;
   std::string stdin_filename;
