@@ -41,10 +41,10 @@ decision_proceduret::resultt smt2_dect::dec_solve()
 
   const auto write_problem_to_file = [&](std::ofstream problem_out) {
     cached_output << stringstream.str();
-    stringstream.clear();
+    stringstream.str(std::string{});
     write_footer();
     problem_out << cached_output.str() << stringstream.str();
-    stringstream.clear();
+    stringstream.str(std::string{});
   };
   write_problem_to_file(std::ofstream(
     temp_file_problem(), std::ios_base::out | std::ios_base::trunc));
