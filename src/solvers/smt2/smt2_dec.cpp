@@ -173,14 +173,18 @@ decision_proceduret::resultt smt2_dect::read_result(std::istream &in)
       parsed.id().empty() && parsed.get_sub().size() == 2 &&
       parsed.get_sub().front().id() == "error")
     {
+      const auto &message = id2string(parsed.get_sub()[1].id());
+
       // We ignore errors after UNSAT because get-value after check-sat
       // returns unsat will give an error.
-      if(res != resultt::D_UNSATISFIABLE)
+      if(
+        res != resultt::D_UNSATISFIABLE &&
+        !(solver == solvert::Z3 &&
+          message.find("must not contain quantifiers") != std::string::npos))
       {
         messaget log{message_handler};
         log.error() << "SMT2 solver returned error message:\n"
-                    << "\t\"" << parsed.get_sub()[1].id() << "\""
-                    << messaget::eom;
+                    << "\t\"" << message << "\"" << messaget::eom;
         return decision_proceduret::resultt::D_ERROR;
       }
     }
