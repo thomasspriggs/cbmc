@@ -760,10 +760,8 @@ literalt smt2_convt::convert(const exprt &expr)
   // store and in future we use the literal instead of the whole expression
   // Note that here we are always converting, so we do not need to consider
   // other literal kinds, only "|B###|"
-  std::stringstream tmpstr;
-  tmpstr << "|B" << l.var_no() << "|";
-  defined_expressions[expr] = tmpstr.str();
-  // End temporary storage
+  defined_expressions[expr] =
+    std::string{"|B"} + std::to_string(l.var_no()) + "|";
   out << "(define-fun ";
   convert_literal(l);
   out << " () Bool ";
