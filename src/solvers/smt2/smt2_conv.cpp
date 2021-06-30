@@ -4355,19 +4355,6 @@ void smt2_convt::set_to(const exprt &expr, bool value)
   }
   out << ")\n";
   return;
-  // OLD BELOW
-  if(!value)
-  {
-    out << "(not ";
-    convert_expr(prepared_expr);
-    out << ")";
-  }
-  else
-    convert_expr(prepared_expr);
-
-  out << ")" << "\n"; // assert
-
-  return;
 }
 
 /// Lower byte_update and byte_extract operations within \p expr. Return an
