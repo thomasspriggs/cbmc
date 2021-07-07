@@ -1,0 +1,11 @@
+CORE
+main.c
+--replace-all-calls-with-contracts
+^EXIT=1$
+^SIGNAL=0$
+^main.c\:\d+\:\d+\: error\: illegal target in assigns clause$
+^ void bar\(char d\[\]\) \_\_CPROVER\_assigns\(d\[7\]\)$
+^CONVERSION ERROR$
+--
+--
+Checks whether parser fails for a single-index array assigns target.
