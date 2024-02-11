@@ -122,6 +122,10 @@ void solver_factoryt::solvert::set_ofstream(std::unique_ptr<std::ofstream> p)
 
 std::unique_ptr<solver_factoryt::solvert> solver_factoryt::get_solver()
 {
+  const auto incremental_smt2_solver =
+    options.get_option("incremental-smt2-solver");
+  if(!incremental_smt2_solver.empty())
+    return get_incremental_smt2(incremental_smt2_solver);
   if(options.get_bool_option("dimacs"))
     return get_dimacs();
   if(options.is_set("external-sat-solver"))
@@ -134,10 +138,6 @@ std::unique_ptr<solver_factoryt::solvert> solver_factoryt::get_solver()
   }
   else if(options.get_bool_option("refine-strings"))
     return get_string_refinement();
-  const auto incremental_smt2_solver =
-    options.get_option("incremental-smt2-solver");
-  if(!incremental_smt2_solver.empty())
-    return get_incremental_smt2(incremental_smt2_solver);
   if(options.get_bool_option("smt2"))
     return get_smt2(get_smt2_solver_type());
   return get_default();
