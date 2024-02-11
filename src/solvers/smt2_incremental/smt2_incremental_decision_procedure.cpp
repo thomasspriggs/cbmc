@@ -636,12 +636,12 @@ void smt2_incremental_decision_proceduret::push(
 
 void smt2_incremental_decision_proceduret::push()
 {
-  UNIMPLEMENTED_FEATURE("`push`.");
+  solver_process->send(smt_push_commandt{1});
 }
 
 void smt2_incremental_decision_proceduret::pop()
 {
-  UNIMPLEMENTED_FEATURE("`pop`.");
+  solver_process->send(smt_pop_commandt{1});
 }
 
 [[nodiscard]] static decision_proceduret::resultt
