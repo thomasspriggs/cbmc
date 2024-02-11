@@ -1,0 +1,9 @@
+CORE
+main.c
+--incremental-loop main.0 --unwind-max 5 --arrays-uf-always
+Passing problem to incremental SMT2 solving via
+^EXIT=10$
+^SIGNAL=0$
+^VERIFICATION FAILED$
+--
+^warning: ignoring
