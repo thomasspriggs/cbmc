@@ -1473,9 +1473,12 @@ static smt_termt convert_expr_to_smt(
   const zero_extend_exprt &zero_extend,
   const sub_expression_mapt &converted)
 {
-  UNREACHABLE_BECAUSE(
-    "zero_extend expression should have been lowered by the decision "
-    "procedure before conversion to smt terms");
+  const auto old_width = to_bitvector_type(zero_extend.op().type()).get_width();
+  const auto new_width = to_bitvector_type(zero_extend.type()).get_width();
+  INVARIANT(
+    new_width > old_width, "`zero_extend_exprt` is expected to add bits.");
+  return smt_bit_vector_theoryt::zero_extend(new_width - old_width)(
+    converted.at(zero_extend.op()));
 }
 
 static smt_termt convert_expr_to_smt(
